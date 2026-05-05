@@ -381,7 +381,7 @@
 
                 <div class="layer-row">
                     <div class="layer-lhs">
-                        <div class="layer-swatch" style="background:rgba(59,130,246,0.65)"></div>
+                        <div class="layer-swatch" style="background:#2171b5"></div>
                         <span class="layer-label">Provinces</span>
                     </div>
                     <div class="toggle on" id="lyr-provinces" onclick="toggleLayer('provinces')" title="Toggle provinces">
@@ -459,8 +459,8 @@
         </div><!-- /.sb-body -->
 
         <div class="sb-footer">
-            © 2025 EverestMap · Powered by MapLibre GL JS<br>
-            Base map: OpenStreetMap contributors · Data: OSM, OpenFreeMap
+            © 2025 EverestMap · Nepal's Open Mapping Platform<br>
+            Map engine: <a href="https://maplibre.org/" target="_blank" style="color:var(--accent)">MapLibre GL JS</a> · Base map: OpenStreetMap contributors
         </div>
     </aside>
     <!-- ══ /Sidebar ═════════════════════════════════════════ -->
@@ -487,15 +487,15 @@ const NEPAL_CENTER   = [84.124, 28.395];
 const NEPAL_ZOOM     = 6.5;
 const NEPAL_BOUNDS   = [[79.8, 26.0], [88.4, 30.6]];
 
-/* Province fill colours keyed by feature id */
+/* Province fill colours — blue choropleth palette keyed by feature id */
 const PROV_COLORS = {
-    1: '#e74c3c',
-    2: '#e67e22',
-    3: '#27ae60',
-    4: '#2980b9',
-    5: '#8e44ad',
-    6: '#16a085',
-    7: '#d35400'
+    1: '#2171b5',   /* Koshi          — medium blue         */
+    2: '#08519c',   /* Madhesh        — deep blue           */
+    3: '#4292c6',   /* Bagmati        — medium-light blue   */
+    4: '#6baed6',   /* Gandaki        — sky blue            */
+    5: '#3182bd',   /* Lumbini        — standard blue       */
+    6: '#c6dbef',   /* Karnali        — very light blue     */
+    7: '#9ecae1'    /* Sudurpashchim  — pale blue           */
 };
 
 /* Nepal Provinces — inline GeoJSON */
@@ -505,7 +505,7 @@ const PROVINCES_GEOJSON = {
         {
             "type": "Feature", "id": 1,
             "properties": {
-                "id": 1, "name": "Koshi", "name_ne": "कोशी प्रदेश",
+                "id": 1, "name": "Koshi", "name_ne": "कोशी प्रदेश", "number": "Province No. 1",
                 "capital": "Biratnagar", "population": 4534943,
                 "area_km2": 25905, "districts": 14,
                 "major_cities": "Biratnagar, Dharan, Itahari",
@@ -519,7 +519,7 @@ const PROVINCES_GEOJSON = {
         {
             "type": "Feature", "id": 2,
             "properties": {
-                "id": 2, "name": "Madhesh", "name_ne": "मधेश प्रदेश",
+                "id": 2, "name": "Madhesh", "name_ne": "मधेश प्रदेश", "number": "Province No. 2",
                 "capital": "Janakpur", "population": 6126288,
                 "area_km2": 9661, "districts": 8,
                 "major_cities": "Janakpur, Birgunj, Rajbiraj",
@@ -533,7 +533,7 @@ const PROVINCES_GEOJSON = {
         {
             "type": "Feature", "id": 3,
             "properties": {
-                "id": 3, "name": "Bagmati", "name_ne": "बागमती प्रदेश",
+                "id": 3, "name": "Bagmati", "name_ne": "बागमती प्रदेश", "number": "Province No. 3",
                 "capital": "Hetauda", "population": 6084042,
                 "area_km2": 20300, "districts": 13,
                 "major_cities": "Kathmandu, Lalitpur, Bhaktapur, Hetauda",
@@ -547,7 +547,7 @@ const PROVINCES_GEOJSON = {
         {
             "type": "Feature", "id": 4,
             "properties": {
-                "id": 4, "name": "Gandaki", "name_ne": "गण्डकी प्रदेश",
+                "id": 4, "name": "Gandaki", "name_ne": "गण्डकी प्रदेश", "number": "Province No. 4",
                 "capital": "Pokhara", "population": 2403757,
                 "area_km2": 21504, "districts": 11,
                 "major_cities": "Pokhara, Besisahar, Baglung",
@@ -561,7 +561,7 @@ const PROVINCES_GEOJSON = {
         {
             "type": "Feature", "id": 5,
             "properties": {
-                "id": 5, "name": "Lumbini", "name_ne": "लुम्बिनी प्रदेश",
+                "id": 5, "name": "Lumbini", "name_ne": "लुम्बिनी प्रदेश", "number": "Province No. 5",
                 "capital": "Butwal", "population": 5124225,
                 "area_km2": 22288, "districts": 12,
                 "major_cities": "Butwal, Bhairahawa, Tulsipur",
@@ -575,7 +575,7 @@ const PROVINCES_GEOJSON = {
         {
             "type": "Feature", "id": 6,
             "properties": {
-                "id": 6, "name": "Karnali", "name_ne": "कर्णाली प्रदेश",
+                "id": 6, "name": "Karnali", "name_ne": "कर्णाली प्रदेश", "number": "Province No. 6",
                 "capital": "Surkhet", "population": 1694889,
                 "area_km2": 27984, "districts": 10,
                 "major_cities": "Surkhet, Jumla, Birendranagar",
@@ -589,7 +589,7 @@ const PROVINCES_GEOJSON = {
         {
             "type": "Feature", "id": 7,
             "properties": {
-                "id": 7, "name": "Sudurpashchim", "name_ne": "सुदूरपश्चिम प्रदेश",
+                "id": 7, "name": "Sudurpashchim", "name_ne": "सुदूरपश्चिम प्रदेश", "number": "Province No. 7",
                 "capital": "Dhangadhi", "population": 2552517,
                 "area_km2": 19539, "districts": 9,
                 "major_cities": "Dhangadhi, Mahendranagar, Dipayal",
@@ -757,7 +757,7 @@ function addProvinceLayer() {
         paint: {
             'fill-color': colorExpr,
             'fill-opacity': ['case',
-                ['boolean', ['feature-state', 'hover'], false], 0.80, 0.45
+                ['boolean', ['feature-state', 'hover'], false], 0.95, 0.82
             ]
         }
     });
@@ -768,9 +768,9 @@ function addProvinceLayer() {
         type: 'line',
         source: 'provinces',
         paint: {
-            'line-color': colorExpr,
+            'line-color': '#ffffff',
             'line-width': ['case',
-                ['boolean', ['feature-state', 'hover'], false], 2.5, 1.2
+                ['boolean', ['feature-state', 'hover'], false], 2.5, 1.5
             ],
             'line-opacity': 0.9
         }
@@ -782,15 +782,15 @@ function addProvinceLayer() {
         type: 'symbol',
         source: 'provinces',
         layout: {
-            'text-field': ['concat', ['get', 'name'], '\n', ['get', 'name_ne']],
+            'text-field': ['concat', ['get', 'name'], '\n', ['get', 'number']],
             'text-size': 13,
             'text-anchor': 'center',
             'text-justify': 'center',
             'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold']
         },
         paint: {
-            'text-color': '#ffffff',
-            'text-halo-color': 'rgba(0,0,0,0.6)',
+            'text-color': '#0a2342',
+            'text-halo-color': 'rgba(255,255,255,0.75)',
             'text-halo-width': 1.5
         },
         minzoom: 5.5
@@ -971,14 +971,14 @@ function addLandmarksLayer() {
    6. PROVINCE INFO PANEL
    ────────────────────────────────────────────────────────────── */
 function updateProvinceInfo(p) {
-    const color = PROV_COLORS[p.id] || '#999';
+    const color = PROV_COLORS[p.id] || '#2171b5';
     document.getElementById('provInfo').innerHTML = `
         <div class="prov-card">
             <div class="prov-name-row">
                 <div class="prov-color-dot" style="background:${color}"></div>
                 <div>
                     <div class="prov-name">${p.name}</div>
-                    <div class="prov-name-ne">${p.name_ne} · Province ${p.id}</div>
+                    <div class="prov-name-ne">${p.name_ne} · ${p.number}</div>
                 </div>
             </div>
             <div class="stat-grid">
