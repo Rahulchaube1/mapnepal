@@ -1,0 +1,215 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "kathmandu",
+        "name": "Kathmandu",
+        "name_ne": "काठमाडौं",
+        "type": "city",
+        "category": "capital",
+        "icon": "🏙️",
+        "description": "Capital of Nepal and cultural heart of the country. Home to seven UNESCO World Heritage Sites.",
+        "altitude_m": 1355
+      },
+      "geometry": { "type": "Point", "coordinates": [85.317, 27.700] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "pokhara",
+        "name": "Pokhara",
+        "name_ne": "पोखरा",
+        "type": "city",
+        "category": "tourism",
+        "icon": "🏞️",
+        "description": "Nepal's tourism capital. Gateway to the Annapurna region, known for Phewa Lake and Himalayan panoramas.",
+        "altitude_m": 820
+      },
+      "geometry": { "type": "Point", "coordinates": [83.985, 28.212] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "lumbini",
+        "name": "Lumbini",
+        "name_ne": "लुम्बिनी",
+        "type": "heritage",
+        "category": "pilgrimage",
+        "icon": "🛕",
+        "description": "Birthplace of Gautama Buddha (c. 563 BCE). UNESCO World Heritage Site and sacred Buddhist pilgrimage destination.",
+        "altitude_m": 150
+      },
+      "geometry": { "type": "Point", "coordinates": [83.276, 27.487] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "everest",
+        "name": "Mt. Everest",
+        "name_ne": "सगरमाथा",
+        "type": "peak",
+        "category": "mountain",
+        "icon": "⛰️",
+        "description": "World's highest mountain at 8,848.86 m above sea level. Called Sagarmatha in Nepali.",
+        "altitude_m": 8848
+      },
+      "geometry": { "type": "Point", "coordinates": [86.925, 27.988] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "annapurna_i",
+        "name": "Annapurna I",
+        "name_ne": "अन्नपूर्णा",
+        "type": "peak",
+        "category": "mountain",
+        "icon": "⛰️",
+        "description": "World's 10th highest mountain at 8,091 m. The first 8,000m peak ever climbed (1950).",
+        "altitude_m": 8091
+      },
+      "geometry": { "type": "Point", "coordinates": [83.820, 28.595] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "namche",
+        "name": "Namche Bazaar",
+        "name_ne": "नाम्चे बजार",
+        "type": "town",
+        "category": "trekking",
+        "icon": "🏔️",
+        "description": "Gateway to the Everest region. The main Sherpa trading hub at 3,440 m altitude.",
+        "altitude_m": 3440
+      },
+      "geometry": { "type": "Point", "coordinates": [86.713, 27.806] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ebc",
+        "name": "Everest Base Camp",
+        "name_ne": "एभरेस्ट बेस क्याम्प",
+        "type": "basecamp",
+        "category": "trekking",
+        "icon": "⛺",
+        "description": "South Base Camp of Mount Everest at 5,364 m. Starting point for Everest summit expeditions.",
+        "altitude_m": 5364
+      },
+      "geometry": { "type": "Point", "coordinates": [86.851, 28.002] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "annapurna_bc",
+        "name": "Annapurna Base Camp",
+        "name_ne": "अन्नपूर्णा बेस क्याम्प",
+        "type": "basecamp",
+        "category": "trekking",
+        "icon": "⛺",
+        "description": "High-altitude sanctuary surrounded by the Annapurna massif at 4,130 m. Iconic 360° mountain views.",
+        "altitude_m": 4130
+      },
+      "geometry": { "type": "Point", "coordinates": [83.876, 28.530] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "biratnagar",
+        "name": "Biratnagar",
+        "name_ne": "विराटनगर",
+        "type": "city",
+        "category": "industry",
+        "icon": "🏭",
+        "description": "Second largest city of Nepal, capital of Koshi Province and the country's main industrial hub.",
+        "altitude_m": 72
+      },
+      "geometry": { "type": "Point", "coordinates": [87.278, 26.453] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "janakpur",
+        "name": "Janakpur",
+        "name_ne": "जनकपुर",
+        "type": "city",
+        "category": "pilgrimage",
+        "icon": "🛕",
+        "description": "Capital of Madhesh Province, mythological birthplace of Sita Devi and site of the Janaki Temple.",
+        "altitude_m": 70
+      },
+      "geometry": { "type": "Point", "coordinates": [85.925, 26.727] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "rara_lake",
+        "name": "Rara Lake",
+        "name_ne": "राराताल",
+        "type": "lake",
+        "category": "nature",
+        "icon": "🌊",
+        "description": "Nepal's largest lake at 10.8 km². Located in Rara National Park at 2,990 m. A pristine alpine gem.",
+        "altitude_m": 2990
+      },
+      "geometry": { "type": "Point", "coordinates": [82.088, 29.513] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "pashupatinath",
+        "name": "Pashupatinath Temple",
+        "name_ne": "पशुपतिनाथ मन्दिर",
+        "type": "temple",
+        "category": "heritage",
+        "icon": "🛕",
+        "description": "Nepal's most sacred Hindu temple dedicated to Lord Shiva. UNESCO World Heritage Site on the banks of the Bagmati River.",
+        "altitude_m": 1360
+      },
+      "geometry": { "type": "Point", "coordinates": [85.349, 27.710] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "bhaktapur",
+        "name": "Bhaktapur Durbar Square",
+        "name_ne": "भक्तपुर दरबार स्क्वायर",
+        "type": "heritage",
+        "category": "heritage",
+        "icon": "🏯",
+        "description": "Well-preserved medieval city and UNESCO World Heritage Site with remarkable Newari architecture.",
+        "altitude_m": 1401
+      },
+      "geometry": { "type": "Point", "coordinates": [85.427, 27.671] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "dhangadhi",
+        "name": "Dhangadhi",
+        "name_ne": "धनगढी",
+        "type": "city",
+        "category": "capital",
+        "icon": "🏙️",
+        "description": "Capital of Sudurpashchim Province in far-western Nepal.",
+        "altitude_m": 178
+      },
+      "geometry": { "type": "Point", "coordinates": [80.598, 28.696] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "phewa_lake",
+        "name": "Phewa Lake",
+        "name_ne": "फेवा ताल",
+        "type": "lake",
+        "category": "nature",
+        "icon": "🌊",
+        "description": "Nepal's second-largest lake in Pokhara Valley. Offers stunning reflections of the Annapurna range.",
+        "altitude_m": 742
+      },
+      "geometry": { "type": "Point", "coordinates": [83.955, 28.196] }
+    }
+  ]
+}

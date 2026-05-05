@@ -1,0 +1,214 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": 1,
+      "properties": {
+        "id": 1,
+        "name": "Koshi",
+        "name_ne": "कोशी प्रदेश",
+        "number": "Province No. 1",
+        "capital": "Biratnagar",
+        "population": 4534943,
+        "area_km2": 25905,
+        "districts": 14,
+        "color": "#e74c3c",
+        "major_cities": "Biratnagar, Dharan, Itahari",
+        "description": "Eastern Nepal province, home to Mount Everest and the Koshi River basin. Gateway to the Everest Base Camp trek."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [86.70, 26.35],
+          [88.20, 26.35],
+          [88.20, 27.65],
+          [87.80, 27.90],
+          [87.30, 28.15],
+          [86.95, 27.65],
+          [86.70, 27.45],
+          [86.70, 26.35]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": 2,
+      "properties": {
+        "id": 2,
+        "name": "Madhesh",
+        "name_ne": "मधेश प्रदेश",
+        "number": "Province No. 2",
+        "capital": "Janakpur",
+        "population": 6126288,
+        "area_km2": 9661,
+        "districts": 8,
+        "color": "#e67e22",
+        "major_cities": "Janakpur, Birgunj, Rajbiraj",
+        "description": "Southern Nepal Terai province with rich cultural heritage and the mythological birthplace of Sita Devi."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [84.50, 26.35],
+          [86.70, 26.35],
+          [86.70, 27.45],
+          [86.00, 27.25],
+          [84.50, 27.10],
+          [84.50, 26.35]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": 3,
+      "properties": {
+        "id": 3,
+        "name": "Bagmati",
+        "name_ne": "बागमती प्रदेश",
+        "number": "Province No. 3",
+        "capital": "Hetauda",
+        "population": 6084042,
+        "area_km2": 20300,
+        "districts": 13,
+        "color": "#27ae60",
+        "major_cities": "Kathmandu, Lalitpur, Bhaktapur, Hetauda",
+        "description": "Central Nepal province including Kathmandu Valley — Nepal's capital, cultural, and political heart."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [84.50, 27.10],
+          [86.00, 27.25],
+          [86.70, 27.45],
+          [86.95, 27.65],
+          [87.10, 28.10],
+          [86.40, 28.70],
+          [85.10, 28.45],
+          [84.50, 27.90],
+          [84.50, 27.10]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": 4,
+      "properties": {
+        "id": 4,
+        "name": "Gandaki",
+        "name_ne": "गण्डकी प्रदेश",
+        "number": "Province No. 4",
+        "capital": "Pokhara",
+        "population": 2403757,
+        "area_km2": 21504,
+        "districts": 11,
+        "color": "#2980b9",
+        "major_cities": "Pokhara, Besisahar, Baglung",
+        "description": "Central-western province famous for Pokhara lake city, the Annapurna range, and premier trekking."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [83.20, 27.10],
+          [84.50, 27.10],
+          [84.50, 27.90],
+          [85.10, 28.45],
+          [84.80, 29.80],
+          [83.40, 30.00],
+          [82.50, 28.90],
+          [82.80, 27.70],
+          [83.20, 27.10]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": 5,
+      "properties": {
+        "id": 5,
+        "name": "Lumbini",
+        "name_ne": "लुम्बिनी प्रदेश",
+        "number": "Province No. 5",
+        "capital": "Butwal",
+        "population": 5124225,
+        "area_km2": 22288,
+        "districts": 12,
+        "color": "#8e44ad",
+        "major_cities": "Butwal, Bhairahawa, Tulsipur",
+        "description": "Western Nepal province and birthplace of Gautama Buddha. A major Buddhist pilgrimage destination."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [81.55, 26.48],
+          [84.50, 26.48],
+          [84.50, 27.10],
+          [83.20, 27.10],
+          [82.80, 27.70],
+          [82.50, 28.90],
+          [81.70, 28.30],
+          [81.55, 26.48]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": 6,
+      "properties": {
+        "id": 6,
+        "name": "Karnali",
+        "name_ne": "कर्णाली प्रदेश",
+        "number": "Province No. 6",
+        "capital": "Surkhet",
+        "population": 1694889,
+        "area_km2": 27984,
+        "districts": 10,
+        "color": "#16a085",
+        "major_cities": "Surkhet, Jumla, Birendranagar",
+        "description": "Nepal's largest province by area. Home to Rara Lake, Shey-Phoksundo Lake, and pristine Himalayan wilderness."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [81.00, 27.40],
+          [82.50, 27.40],
+          [82.50, 28.90],
+          [83.40, 30.00],
+          [82.20, 30.45],
+          [81.30, 30.45],
+          [80.55, 29.20],
+          [81.00, 27.40]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": 7,
+      "properties": {
+        "id": 7,
+        "name": "Sudurpashchim",
+        "name_ne": "सुदूरपश्चिम प्रदेश",
+        "number": "Province No. 7",
+        "capital": "Dhangadhi",
+        "population": 2552517,
+        "area_km2": 19539,
+        "districts": 9,
+        "color": "#d35400",
+        "major_cities": "Dhangadhi, Mahendranagar, Dipayal",
+        "description": "Far-western Nepal province bordering India and China. Known for Shuklaphanta National Park and Api Himal."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [80.06, 26.48],
+          [81.55, 26.48],
+          [81.70, 28.30],
+          [80.55, 29.20],
+          [81.30, 30.45],
+          [80.06, 30.45],
+          [80.06, 26.48]
+        ]]
+      }
+    }
+  ]
+}
