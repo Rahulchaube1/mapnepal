@@ -1,0 +1,134 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ebc",
+        "name": "Everest Base Camp Trek",
+        "name_ne": "सगरमाथा बेस क्याम्प ट्रेक",
+        "difficulty": "Challenging",
+        "distance_km": 130,
+        "duration": "14–18 days",
+        "max_altitude_m": 5364,
+        "color": "#e74c3c",
+        "start": "Lukla",
+        "end": "Everest Base Camp",
+        "best_season": "Mar–May, Sep–Nov",
+        "description": "Nepal's most iconic trek passing through Namche Bazaar, Tengboche Monastery, and ending at 5,364m at the foot of the world's highest mountain."
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [86.729, 27.686],
+          [86.713, 27.806],
+          [86.764, 27.838],
+          [86.810, 27.870],
+          [86.831, 27.896],
+          [86.810, 27.956],
+          [86.831, 27.993],
+          [86.851, 28.002]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "annapurna",
+        "name": "Annapurna Circuit",
+        "name_ne": "अन्नपूर्णा सर्किट",
+        "difficulty": "Strenuous",
+        "distance_km": 160,
+        "duration": "12–21 days",
+        "max_altitude_m": 5416,
+        "color": "#3498db",
+        "start": "Besisahar",
+        "end": "Nayapul",
+        "best_season": "Mar–May, Oct–Nov",
+        "description": "One of the world's classic treks, circumnavigating the Annapurna massif over Thorong La Pass (5,416m)."
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [84.378, 28.230],
+          [84.350, 28.310],
+          [84.330, 28.360],
+          [84.229, 28.534],
+          [84.017, 28.673],
+          [83.934, 28.790],
+          [83.869, 28.822],
+          [83.720, 28.781],
+          [83.660, 28.600],
+          [83.619, 28.513],
+          [83.693, 28.397],
+          [83.827, 28.341]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "langtang",
+        "name": "Langtang Valley Trek",
+        "name_ne": "लाङटाङ उपत्यका ट्रेक",
+        "difficulty": "Moderate",
+        "distance_km": 65,
+        "duration": "7–10 days",
+        "max_altitude_m": 3870,
+        "color": "#27ae60",
+        "start": "Syabrubesi",
+        "end": "Kyanjin Gompa",
+        "best_season": "Mar–May, Sep–Nov",
+        "description": "A rewarding valley trek north of Kathmandu through Tamang villages and yak pastures to Kyanjin Gompa."
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [85.347, 28.157],
+          [85.375, 28.165],
+          [85.420, 28.175],
+          [85.460, 28.185],
+          [85.490, 28.200],
+          [85.513, 28.215],
+          [85.540, 28.213],
+          [85.566, 28.213]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "manaslu",
+        "name": "Manaslu Circuit Trek",
+        "name_ne": "मनास्लु सर्किट ट्रेक",
+        "difficulty": "Strenuous",
+        "distance_km": 177,
+        "duration": "14–18 days",
+        "max_altitude_m": 5106,
+        "color": "#f39c12",
+        "start": "Soti Khola",
+        "end": "Besisahar",
+        "best_season": "Mar–May, Sep–Nov",
+        "description": "Remote trek circling Manaslu (8,163m), Nepal's third highest peak, crossing Larkya La Pass at 5,106m."
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [84.632, 28.111],
+          [84.625, 28.220],
+          [84.530, 28.380],
+          [84.460, 28.530],
+          [84.360, 28.650],
+          [84.210, 28.680],
+          [84.080, 28.700],
+          [83.980, 28.665],
+          [83.880, 28.590],
+          [83.820, 28.450],
+          [84.000, 28.340],
+          [84.200, 28.260],
+          [84.378, 28.230]
+        ]
+      }
+    }
+  ]
+}
