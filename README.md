@@ -1,154 +1,255 @@
 <p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://maplibre.org/img/maplibre-logos/maplibre-logo-for-dark-bg.svg">
-    <source media="(prefers-color-scheme: light)" srcset="https://maplibre.org/img/maplibre-logos/maplibre-logo-for-light-bg.svg">
-    <img alt="MapLibre Logo" src="https://maplibre.org/img/maplibre-logos/maplibre-logo-for-light-bg.svg" width="200">
-  </picture>
+  <span style="font-size:64px">🗺️</span>
 </p>
 
-# MapLibre GL JS
+<h1 align="center">EverestMap</h1>
+<p align="center"><strong>Nepal's modern, open-source mapping platform</strong></p>
+<p align="center">Built on MapLibre GL JS and OpenStreetMap data</p>
 
-[![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg?style=flat)](LICENSE.txt) [![Version](https://img.shields.io/npm/v/maplibre-gl?style=flat)](https://www.npmjs.com/package/maplibre-gl) [![CI](https://github.com/maplibre/maplibre-gl-js/actions/workflows/test-all.yml/badge.svg)](https://github.com/maplibre/maplibre-gl-js/actions/workflows/test-all.yml) [![PRs](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](https://opensource.org/licenses/BSD-3-Clause) [![codecov](https://codecov.io/gh/maplibre/maplibre-gl-js/branch/main/graph/badge.svg)](https://codecov.io/gh/maplibre/maplibre-gl-js)
+<p align="center">
+  <img alt="Nepal Provinces Map" src="https://github.com/user-attachments/assets/dfe179f5-2ffe-4e7d-8e6f-f518e77c6e97" width="600">
+</p>
 
-**[MapLibre GL JS](https://maplibre.org/maplibre-gl-js/docs/API/)** is an open-source library for publishing maps on your websites or webview based apps. Fast displaying of maps is possible thanks to GPU-accelerated vector tile rendering.
+<p align="center">
+  <a href="LICENSE.txt"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat" alt="License"></a>
+  <img src="https://img.shields.io/badge/EverestMap-Nepal%20Mapping-4299e1?style=flat" alt="EverestMap">
+  <img src="https://img.shields.io/badge/Nepal-7%20Provinces-red?style=flat" alt="Nepal Provinces">
+  <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat" alt="PRs welcome">
+</p>
 
-It originated as an open-source fork of [mapbox-gl-js](https://github.com/mapbox/mapbox-gl-js), before their switch to a non-OSS license in December 2020. The library's initial versions (1.x) were intended to be a drop-in replacement for the Mapbox’s OSS version (1.x) with additional functionality, but have evolved a lot since then.
+> A next-generation open-source map of Nepal with province boundaries, trekking routes, smart search, and 3D terrain.
 
-## Getting Started
+---
 
-Include the CSS file in the `<head>` of your HTML file.
+## 📸 Features
 
-```html
-<link href='https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css' rel='stylesheet' />
+| Feature | Description |
+|---------|-------------|
+| 🏔️ **Nepal Provinces** | All 7 provinces rendered with blue choropleth fills, borders, bilingual labels (English + नेपाली), and hover / click info panels |
+| 🥾 **Trekking Routes** | EBC, Annapurna Circuit, Langtang Valley, Manaslu Circuit — colour-coded with distance & altitude metadata |
+| 📍 **Landmarks** | 15+ key cities, peaks, temples, lakes with icon overlays and popup descriptions |
+| 🔍 **Smart Search** | Full-text search powered by Nominatim / OpenStreetMap; results fly-to on selection |
+| 🌓 **Dark / Light Theme** | Instant theme switching — CartoDB Dark Matter (dark) / OpenFreeMap Bright (light) |
+| 🗂️ **Layer Toggles** | Toggle provinces, trekking routes, and landmarks independently |
+| ⛰️ **3D Terrain** | One-click 3D elevation exaggeration via Mapterhorn DEM tiles |
+| 📐 **Navigation Controls** | Zoom, compass, pitch, full-screen, geolocation |
+| 📱 **Responsive UI** | Collapsible sidebar; works on desktop and mobile |
+| 🔌 **REST API Backend** | Node.js/Express server with geocoding, routing, and data endpoints |
+
+---
+
+## 🗺️ Nepal Province Map
+
+EverestMap displays all 7 provinces of Nepal with a blue choropleth style, clearly showing provincial and district boundaries:
+
+| # | Province | Capital | Population | Area (km²) | Districts |
+|---|----------|---------|------------|------------|-----------|
+| 1 | Koshi कोशी | Biratnagar | 4.53M | 25,905 | 14 |
+| 2 | Madhesh मधेश | Janakpur | 6.13M | 9,661 | 8 |
+| 3 | Bagmati बागमती | Hetauda | 6.08M | 20,300 | 13 |
+| 4 | Gandaki गण्डकी | Pokhara | 2.40M | 21,504 | 11 |
+| 5 | Lumbini लुम्बिनी | Butwal | 5.12M | 22,288 | 12 |
+| 6 | Karnali कर्णाली | Surkhet | 1.69M | 27,984 | 10 |
+| 7 | Sudurpashchim सुदूरपश्चिम | Dhangadhi | 2.55M | 19,539 | 9 |
+
+---
+
+## 🧱 Architecture
+
+```
+┌─────────────────────────────┐      ┌──────────────────────────────┐
+│         Browser             │      │      EverestMap Backend       │
+│                             │      │        (Node.js / Express)    │
+│  ┌───────────────────────┐  │ HTTP │  ┌──────────────────────────┐ │
+│  │  frontend/index.html  │◄─┼──────┼──│  GET /api/provinces      │ │
+│  │                       │  │      │  │  GET /api/trekking-routes│ │
+│  │  MapLibre GL JS 5.x   │  │      │  │  GET /api/landmarks      │ │
+│  │  (map rendering)      │──┼──────┼─►│  GET /api/search         │ │
+│  │                       │  │      │  │  GET /api/route          │ │
+│  └───────────────────────┘  │      │  │  GET /api/reverse        │ │
+│                             │      │  └──────────────────────────┘ │
+└─────────────────────────────┘      │                               │
+                                     │  ┌──────────────────────────┐ │
+                                     │  │   data/                  │ │
+                                     │  │   nepal-provinces.geojson│ │
+                                     │  │   trekking-routes.geojson│ │
+                                     │  │   landmarks.geojson      │ │
+                                     │  └──────────────────────────┘ │
+                                     └──────────────────────────────┘
+                                              │           │
+                                     ┌────────▼───┐  ┌────▼──────────┐
+                                     │ Nominatim  │  │  OSRM routing │
+                                     │ (search &  │  │  (directions) │
+                                     │  reverse)  │  └───────────────┘
+                                     └────────────┘
 ```
 
-Include the following code in the `<body>` of your HTML file.
+### Tech Stack
 
-```html
-<div id='map' style='width: 400px; height: 300px;'></div>
-<script type='module'>
-import * as maplibregl from 'https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.mjs';
+| Layer | Technology |
+|-------|------------|
+| Map rendering | [MapLibre GL JS](https://maplibre.org/) 5.x |
+| Base map tiles | [OpenFreeMap](https://openfreemap.org/) (light) · [CartoDB Dark Matter](https://carto.com/) (dark) |
+| Terrain DEM | [Mapterhorn](https://mapterhorn.com/) raster-dem |
+| Vector data | Inline GeoJSON (provinces, treks, landmarks) |
+| Geocoding | [Nominatim / OpenStreetMap](https://nominatim.openstreetmap.org/) |
+| Routing | [OSRM demo server](https://router.project-osrm.org/) |
+| Backend | Node.js 18+ / Express 4 |
+| Styling | Custom CSS variables (dark/light), no framework dependencies |
 
-maplibregl.setWorkerUrl('https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl-worker.mjs');
+---
 
-const map = new maplibregl.Map({
-  container: 'map',
-  style: 'https://demotiles.maplibre.org/style.json', // stylesheet location
-  center: [-74.5, 40], // starting position [lng, lat]
-  zoom: 9 // starting zoom
-});
-</script>
+## 🚀 Quick Start
+
+### Option A — Frontend only (no server needed)
+
+Open `everestmap/frontend/index.html` directly in any modern browser or serve it with any static file server:
+
+```bash
+# Using Node.js
+npx serve everestmap/frontend
+
+# Or using Python
+python -m http.server -d everestmap/frontend 8080
 ```
 
-Enjoy the map!
+Then navigate to **http://localhost:8080**.
 
-<br />
+---
 
-## Documentation
+### Option B — Full-stack (frontend + API backend)
 
-Full documentation for this library [is available here](https://maplibre.org/maplibre-gl-js/docs/API/).
+**Prerequisites:** Node.js 18+ and npm 9+
 
-Check out the features through [examples](https://maplibre.org/maplibre-gl-js/docs/examples/).
+```bash
+# 1. Install backend dependencies
+cd everestmap/backend
+npm install
 
-| Showcases                                                                                                              |                                                                                                                            |
-| ---------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| ![Display a map](https://maplibre.org/maplibre-gl-js/docs/assets/examples/display-a-map.png)                           | ![Third party vector tile source](https://maplibre.org/maplibre-gl-js/docs/assets/examples/3d-terrain.png)                 |
-| ![Animate a series of images](https://maplibre.org/maplibre-gl-js/docs/assets/examples/animate-a-series-of-images.png) | ![Create a heatmap layer](https://maplibre.org/maplibre-gl-js/docs/assets/examples/create-a-heatmap-layer.png)             |
-| ![3D buildings](https://maplibre.org/maplibre-gl-js/docs/assets/examples/display-buildings-in-3d.png)                  | ![Visualize population density](https://maplibre.org/maplibre-gl-js/docs/assets/examples/visualize-population-density.png) |
+# 2. Start the server
+npm start
+# → Server running at http://localhost:3001
 
-<br />
+# 3. Open your browser
+open http://localhost:3001
+```
 
-Want an example? Have a look at the official [MapLibre GL JS Documentation](https://maplibre.org/maplibre-gl-js/docs/examples/).
+The backend serves the frontend from `/` and all API routes under `/api/*`.
 
-Use MapLibre GL JS bindings for [React](https://visgl.github.io/react-map-gl/docs/get-started) and [Angular](https://github.com/maplibre/ngx-maplibre-gl). Find more at [awesome-maplibre](https://github.com/maplibre/awesome-maplibre).
+**Development mode** (auto-restart on file changes):
+```bash
+npm run dev
+```
 
-<br />
+---
 
-## Contribution
+## 📡 API Reference
 
-### Getting Involved
+All API endpoints are prefixed with `/api`.
 
-Join the #maplibre slack channel at OSMUS: get an invite at https://slack.openstreetmap.us/
-Read the [CONTRIBUTING.md](CONTRIBUTING.md) guide in order to get familiar with how we do things around here.
+### `GET /api/provinces`
+Returns GeoJSON FeatureCollection with Nepal's 7 provinces including name, population, area, and description.
 
-### Avoid Fragmentation
+### `GET /api/trekking-routes`
+Returns GeoJSON FeatureCollection with 4 classic trekking routes (EBC, Annapurna, Langtang, Manaslu).
 
-If you depend on a free software alternative to `mapbox-gl-js`, please consider joining our effort! Anyone with a stake in a healthy community-led fork is welcome to help us figure out our next steps. We welcome contributors and leaders! MapLibre GL JS already represents the combined efforts of a few early fork efforts, and we all benefit from "one project" rather than "our way". If you know of other forks, please reach out to them and direct them here.
+### `GET /api/landmarks`
+Returns GeoJSON FeatureCollection with 15+ major cities, peaks, temples, and natural landmarks.
 
-> **MapLibre GL JS** is developed following [Semantic Versioning (2.0.0)](https://semver.org/spec/v2.0.0.html).
+### `GET /api/search?q=<query>[&limit=6]`
+Geocodes a place name using Nominatim and returns a GeoJSON FeatureCollection.
 
-## Sponsors
+**Example:**
+```
+GET /api/search?q=Pokhara
+GET /api/search?q=सगरमाथा
+```
 
-We thank everyone who supported us financially in the past and special thanks to the people and organizations who support us with recurring donations!
+### `GET /api/reverse?lat=<lat>&lng=<lng>`
+Reverse geocodes coordinates to a human-readable address.
 
-Read more about the MapLibre Sponsorship Program at [https://maplibre.org/sponsors/](https://maplibre.org/sponsors/).
+**Example:**
+```
+GET /api/reverse?lat=27.700&lng=85.317
+```
 
-Gold:
+### `GET /api/route?from=<lng,lat>&to=<lng,lat>[&mode=driving|walking|cycling]`
+Returns a GeoJSON Feature with the route geometry and metadata (distance, duration).
 
-<a href="https://www.microsoft.com/"><img src="https://maplibre.org/img/msft-logo.svg" alt="Logo MSFT" width="25%"/></a>
+**Example:**
+```
+GET /api/route?from=85.317,27.700&to=83.985,28.212&mode=driving
+```
 
-Silver:
+### `GET /health`
+Server health check.
 
-<a href="https://www.mierune.co.jp/?lang=en"><img src="https://maplibre.org/img/mierune-logo.svg" alt="Logo MIERUNE" width="25%"/></a>
+---
 
-<a href="https://komoot.com/"><img src="https://maplibre.org/img/komoot-logo.svg" alt="Logo komoot" width="25%"/></a>
+## 🗂️ Project Structure
 
-<a href="https://www.jawg.io/"><img src="https://maplibre.org/img/jawgmaps-logo.svg" alt="Logo JawgMaps" width="25%"/></a>
+```
+everestmap/
+├── README.md                   # EverestMap documentation
+│
+├── frontend/
+│   └── index.html              # Complete single-page application
+│                                 • MapLibre GL JS (CDN)
+│                                 • Inline GeoJSON data
+│                                 • Inline CSS (dark/light themes)
+│                                 • Inline JS (map, search, UI)
+│
+├── backend/
+│   ├── package.json            # Node.js dependencies
+│   └── server.js               # Express API server
+│
+└── data/
+    ├── nepal-provinces.geojson # 7 Nepal provinces with metadata
+    ├── trekking-routes.geojson # 4 classic trekking routes
+    └── landmarks.geojson       # 15+ landmarks, peaks, cities
+```
 
-<a href="https://www.radar.com/"><img src="https://maplibre.org/img/radar-logo.svg" alt="Logo Radar" width="25%"/></a>
+---
 
-<a href="https://www.mapme.com/"><img src="https://maplibre.org/img/mapme-logo.svg" alt="Logo mapme" width="25%"/></a>
+## 🥾 Trekking Routes
 
-<a href="https://www.maptiler.com/"><img src="https://maplibre.org/img/maptiler-logo.svg" alt="Logo maptiler" width="25%"/></a>
+| Trek | Distance | Duration | Max Altitude |
+|------|----------|----------|--------------|
+| Everest Base Camp | ~130 km | 14–18 days | 5,364 m |
+| Annapurna Circuit | ~160 km | 12–21 days | 5,416 m |
+| Langtang Valley | ~65 km | 7–10 days | 3,870 m |
+| Manaslu Circuit | ~177 km | 14–18 days | 5,106 m |
 
-<a href="https://aws.amazon.com/location"><img src="https://maplibre.org/img/aws-logo.svg" alt="Logo AWS" width="25%"/></a>
+---
 
-<a href="https://www.caltopo.com/"><img src="https://maplibre.org/img/caltopo-logo.svg" alt="Caltopo AWS" width="25%"/></a>
+## 🔭 Roadmap / Future Enhancements
 
-Backers and Supporters:
+- [ ] **PostGIS database** integration for dynamic geospatial queries
+- [ ] **User authentication** — save favourite places and custom routes
+- [ ] **Offline PWA** — service worker for tile caching
+- [ ] **Voice navigation** — Web Speech API integration
+- [ ] **AI assistant (EverestQ)** — natural language map queries
+- [ ] **Disaster alert layer** — earthquake / flood overlays (USGS / BIPAD portal)
+- [ ] **Satellite imagery toggle** — via TiTiler or Sentinel Hub
+- [ ] **Real-time location sharing**
+- [ ] **Custom style editor** — in-browser MapLibre style JSON editor
+- [ ] **OpenMapTiles self-hosting** — replace CDN tiles with self-hosted vector tiles
+- [ ] **AR navigation** placeholder
 
-<a href="https://opencollective.com/maplibre/backer/0/website?requireActive=false" target="_blank"><img src="https://opencollective.com/maplibre/backer/0/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/maplibre/backer/1/website?requireActive=false" target="_blank"><img src="https://opencollective.com/maplibre/backer/1/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/maplibre/backer/2/website?requireActive=false" target="_blank"><img src="https://opencollective.com/maplibre/backer/2/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/maplibre/backer/3/website?requireActive=false" target="_blank"><img src="https://opencollective.com/maplibre/backer/3/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/maplibre/backer/4/website?requireActive=false" target="_blank"><img src="https://opencollective.com/maplibre/backer/4/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/maplibre/backer/5/website?requireActive=false" target="_blank"><img src="https://opencollective.com/maplibre/backer/5/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/maplibre/backer/6/website?requireActive=false" target="_blank"><img src="https://opencollective.com/maplibre/backer/6/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/maplibre/backer/7/website?requireActive=false" target="_blank"><img src="https://opencollective.com/maplibre/backer/7/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/maplibre/backer/8/website?requireActive=false" target="_blank"><img src="https://opencollective.com/maplibre/backer/8/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/maplibre/backer/9/website?requireActive=false" target="_blank"><img src="https://opencollective.com/maplibre/backer/9/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/maplibre/backer/10/website?requireActive=false" target="_blank"><img src="https://opencollective.com/maplibre/backer/10/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/maplibre/backer/11/website?requireActive=false" target="_blank"><img src="https://opencollective.com/maplibre/backer/11/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/maplibre/backer/12/website?requireActive=false" target="_blank"><img src="https://opencollective.com/maplibre/backer/12/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/maplibre/backer/13/website?requireActive=false" target="_blank"><img src="https://opencollective.com/maplibre/backer/13/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/maplibre/backer/14/website?requireActive=false" target="_blank"><img src="https://opencollective.com/maplibre/backer/14/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/maplibre/backer/15/website?requireActive=false" target="_blank"><img src="https://opencollective.com/maplibre/backer/15/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/maplibre/backer/16/website?requireActive=false" target="_blank"><img src="https://opencollective.com/maplibre/backer/16/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/maplibre/backer/17/website?requireActive=false" target="_blank"><img src="https://opencollective.com/maplibre/backer/17/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/maplibre/backer/18/website?requireActive=false" target="_blank"><img src="https://opencollective.com/maplibre/backer/18/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/maplibre/backer/19/website?requireActive=false" target="_blank"><img src="https://opencollective.com/maplibre/backer/19/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/maplibre/backer/20/website?requireActive=false" target="_blank"><img src="https://opencollective.com/maplibre/backer/20/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/maplibre/backer/21/website?requireActive=false" target="_blank"><img src="https://opencollective.com/maplibre/backer/21/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/maplibre/backer/22/website?requireActive=false" target="_blank"><img src="https://opencollective.com/maplibre/backer/22/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/maplibre/backer/23/website?requireActive=false" target="_blank"><img src="https://opencollective.com/maplibre/backer/23/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/maplibre/backer/24/website?requireActive=false" target="_blank"><img src="https://opencollective.com/maplibre/backer/24/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/maplibre/backer/25/website?requireActive=false" target="_blank"><img src="https://opencollective.com/maplibre/backer/25/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/maplibre/backer/26/website?requireActive=false" target="_blank"><img src="https://opencollective.com/maplibre/backer/26/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/maplibre/backer/27/website?requireActive=false" target="_blank"><img src="https://opencollective.com/maplibre/backer/27/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/maplibre/backer/28/website?requireActive=false" target="_blank"><img src="https://opencollective.com/maplibre/backer/28/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/maplibre/backer/29/website?requireActive=false" target="_blank"><img src="https://opencollective.com/maplibre/backer/29/avatar.svg?requireActive=false"></a>
-<a href="https://opencollective.com/maplibre/backer/30/website?requireActive=false" target="_blank"><img src="https://opencollective.com/maplibre/backer/30/avatar.svg?requireActive=false"></a>
+---
 
-<br />
+## 📜 License
 
-## Thank you Mapbox 🙏🏽
+Data: © [OpenStreetMap contributors](https://www.openstreetmap.org/copyright) (ODbL)  
+Code: MIT — see [LICENSE.txt](LICENSE.txt)
 
-We'd like to acknowledge the amazing work Mapbox has contributed to open source. The open source community is sad to part ways with them, but we simultaneously feel grateful for everything they already contributed. `mapbox-gl-js` 1.x is an open source achievement that now lives on as `maplibre-gl`. We're proud to develop on the shoulders of giants, thank you Mapbox 🙇🏽‍♀️.
+---
 
-Please keep in mind: Unauthorized backports are the biggest threat to the MapLibre project. It is unacceptable to backport code from mapbox-gl-js, which is not covered by the former BSD-3 license. If you are unsure about this issue, [please ask](https://github.com/maplibre/maplibre-gl-js/discussions)!
+## 🙏 Credits
 
-<br />
-
-## License
-
-**MapLibre GL JS** is licensed under the [3-Clause BSD license](./LICENSE.txt).
+- [MapLibre GL JS](https://maplibre.org/) — open-source map rendering engine
+- [OpenFreeMap](https://openfreemap.org/) — free vector tile hosting
+- [CartoDB Basemaps](https://carto.com/basemaps/) — dark base map tiles
+- [Nominatim / OpenStreetMap](https://nominatim.openstreetmap.org/) — geocoding
+- [OSRM](https://project-osrm.org/) — open-source routing machine
+- [Mapterhorn](https://mapterhorn.com/) — terrain DEM tiles
