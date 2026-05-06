@@ -311,7 +311,19 @@
             <div id="resultsView">
                 <div style="padding:16px 24px; font-size:14px; color:var(--gm-muted);">Search Results & Intelligence</div>
                 <div id="resultsList"></div>
+                
+                <!-- Himalayan Highlights (Slides) -->
+                <div id="himalayanHighlights" style="margin-top:20px; border-top:1px solid #eee; padding:16px;">
+                    <div style="font-size:12px; font-weight:700; color:var(--gm-muted); margin-bottom:12px; text-transform:uppercase;">Himalayan Highlights</div>
+                    <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                        <button class="chip" onclick="flyToHigh('Mount Everest', [86.9250, 27.9881])">🏔️ Everest</button>
+                        <button class="chip" onclick="flyToHigh('Annapurna', [83.9400, 28.5900])">🏔️ Annapurna</button>
+                        <button class="chip" onclick="flyToHigh('Machapuchare', [83.9491, 28.4972])">🏔️ Fishtail</button>
+                        <button class="chip" onclick="flyToHigh('Kathmandu', [85.3240, 27.7172])">🏙️ Kathmandu</button>
+                    </div>
+                </div>
             </div>
+
 
             <!-- Place Details -->
             <div id="detailView" style="display:none;">
@@ -501,12 +513,23 @@
                 <input type="checkbox" onchange="toggleGlobe(this.checked)">
                 <span>Globe view</span>
             </label>
+            <div id="globe-settings" style="display:none; margin-top:10px; padding-left:28px; border-left:2px solid var(--gm-blue);">
+                <label class="layer-checkbox">
+                    <input type="checkbox" onchange="toggleAutoRotate(this.checked)">
+                    <span>Auto-rotate</span>
+                </label>
+                <div style="margin-top:10px;">
+                    <div style="font-size:11px; margin-bottom:4px;">Daylight Index</div>
+                    <input type="range" min="0" max="24" step="0.5" value="12" style="width:100%;" oninput="setDaylight(this.value)">
+                </div>
+            </div>
             <label class="layer-checkbox">
                 <input type="checkbox" checked onchange="toggleLabels(this.checked)">
                 <span>Labels</span>
             </label>
         </div>
     </div>
+
 
 
     <div id="legend-btn" onclick="toggleLegend()" title="Map Legend">🗺️</div>
@@ -1235,6 +1258,7 @@
     }
 
     function toggleGlobe(enabled) {
+        document.getElementById('globe-settings').style.display = enabled ? 'block' : 'none';
         if (enabled) {
             map.setProjection({ name: 'globe' });
             
@@ -1245,21 +1269,74 @@
                 'high-color': '#245cdf', // Atmosphere blue
                 'space-color': '#000000',
                 'horizon-blend': 0.1,
-                'star-intensity': 0.5 // If supported by the version
+                'star-intensity': 0.5
             });
 
             document.getElementById('map').classList.add('globe-space');
             map.setMinZoom(0);
-            map.setRenderWorldCopies(true); // Ensure 360 degree wrap
+            map.setRenderWorldCopies(true); 
             showToast("Interstellar mode activated. Orbiting MapNepal.");
         } else {
             map.setProjection({ name: 'mercator' });
             map.setFog(null);
             document.getElementById('map').classList.remove('globe-space');
             map.setMinZoom(0);
+            stopAutoRotate();
             showToast("Atmospheric reentry complete. Welcome home.");
         }
     }
+
+    /* ── Advanced Globe Controls ─────────────────────────── */
+    let rotationInterval = null;
+    function toggleAutoRotate(enabled) {
+        if (enabled) {
+            rotationInterval = setInterval(() => {
+                const center = map.getCenter();
+                center.lng += 0.1; // Rotate slowly
+                map.setCenter(center);
+            }, 50);
+            showToast("Orbital rotation initialized.");
+        } else {
+            stopAutoRotate();
+        }
+    }
+
+    function stopAutoRotate() {
+        if (rotationInterval) {
+            clearInterval(rotationInterval);
+            rotationInterval = null;
+        }
+    }
+
+    function setDaylight(hour) {
+        const intensity = Math.sin((hour / 24) * Math.PI);
+        const color = hour < 6 || hour > 18 ? '#010b1a' : '#87ceeb';
+        
+        map.setFog({
+            'range': [0.5, 10],
+            'color': color,
+            'high-color': '#245cdf',
+            'space-color': '#000000',
+            'horizon-blend': 0.1,
+            'star-intensity': 1 - intensity
+        });
+        
+        showToast(`Simulation Time: ${hour}:00`);
+    }
+
+    function flyToHigh(name, coords) {
+        showToast(`Flying to ${name}...`);
+        map.flyTo({
+            center: coords,
+            zoom: 13,
+            pitch: 60,
+            bearing: -20,
+            essential: true,
+            duration: 5000
+        });
+        triggerSearchWith(name);
+    }
+
 
 
 
