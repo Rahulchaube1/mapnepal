@@ -1,25 +1,23 @@
-# 🗺️ EverestMap
+# 🏔️ EverestMap — Nepal's Premier Mapping Platform
 
-**Nepal's modern, open-source mapping platform** — built on MapLibre GL JS and OpenStreetMap data.
-
-> A next-generation alternative to Google Maps, focused on Nepal with global scalability.
+EverestMap is a high-fidelity, open-source intelligence and mapping platform designed for exploring the diverse geography of Nepal. Built with a premium **Vision Pro** inspired aesthetic, it combines advanced mapping technology with a functional Express API backend to provide a seamless, state-of-the-art experience.
 
 ---
 
-## 📸 Features
+## 📸 Premium Features
 
 | Feature | Description |
 |---------|-------------|
-| 🏔️ **Nepal Provinces** | All 7 provinces rendered with distinct colour-coded fills, borders, bilingual labels (English + नेपाली), and hover / click info panels |
-| 🥾 **Trekking Routes** | EBC, Annapurna Circuit, Langtang Valley, Manaslu Circuit — colour-coded with distance & altitude metadata |
-| 📍 **Landmarks** | 15+ key cities, peaks, temples, lakes with icon overlays and popup descriptions |
-| 🔍 **Smart Search** | Full-text search powered by Nominatim / OpenStreetMap; results fly-to on selection |
-| 🌓 **Dark / Light Theme** | Instant theme switching — CartoDB Dark Matter (dark) / OpenFreeMap Bright (light) |
-| 🗂️ **Layer Toggles** | Toggle provinces, trekking routes, and landmarks independently |
-| ⛰️ **3D Terrain** | One-click 3D elevation exaggeration via Mapterhorn DEM tiles |
-| 📐 **Navigation Controls** | Zoom, compass, pitch, full-screen, geolocation |
-| 📱 **Responsive UI** | Collapsible sidebar; works on desktop and mobile |
-| 🔌 **REST API Backend** | Node.js/Express server with geocoding, routing, and data endpoints |
+| 💎 **Premium UI** | High-fidelity **Glassmorphism** design with modern typography (Outfit & Inter) |
+| 🏔️ **Nepal Provinces** | All 7 provinces rendered with distinct colour-coded fills, borders, and dynamic info panels |
+| 🥾 **Trekking Routes** | EBC, Annapurna Circuit, Langtang Valley, Manaslu Circuit — fully integrated via API |
+| 📍 **Landmarks** | Cities, peaks, temples, and natural wonders with icon overlays and detailed popups |
+| 🔍 **Proxy Search** | Full-text search routed through our internal proxy for high reliability and speed |
+| 🌗 **Vision Pro Dark Mode** | Sophisticated dark theme with electric cyan accents and HSL tailored palettes |
+| 🗂️ **Smart Layering** | Dynamic toggles for Political Boundaries, Trekking Routes, and Landmarks |
+| ⛰️ **High-Fidelity 3D** | Immersive 3D terrain exploration powered by raster-dem tiles |
+| 📱 **Adaptive Layout** | Fully responsive design that feels premium on both mobile and desktop |
+| 🔌 **Functional API** | Robust Node.js/Express backend serving geocoding, routing, and GeoJSON endpoints |
 
 ---
 
@@ -223,9 +221,10 @@ everestmap/
 
 ## 📜 License
 
+Code & Design: © 2025 EverestMap Project. Licensed under the **MIT License**.  
 Data: © [OpenStreetMap contributors](https://www.openstreetmap.org/copyright) (ODbL)  
-Code: MIT — see the root [LICENSE.txt](../LICENSE.txt)
-
+License File: [LICENSE](file:///c:/Users/rahul/OneDrive/Desktop/aftermap/everestmap/LICENSE)  
+Copyright Notice: [COPYRIGHT](file:///c:/Users/rahul/OneDrive/Desktop/aftermap/everestmap/COPYRIGHT)
 ---
 
 ## 🙏 Credits

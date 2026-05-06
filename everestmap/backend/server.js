@@ -63,14 +63,16 @@ app.use('/api/reverse', searchLimiter);
 
 /* Serve frontend at root */
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
+/* Serve data folder statically */
+app.use('/data', express.static(path.join(__dirname, '..', 'data')));
 
 /* ──────────────────────────────────────────────────────────────
    DATA ENDPOINTS
    ────────────────────────────────────────────────────────────── */
 
-/** Nepal provinces GeoJSON */
+/** Nepal provinces GeoJSON (Updated with Lipulekh/Kalapani/Limpiyadhura) */
 app.get('/api/provinces', (_req, res) => {
-    res.json(loadGeoJSON('nepal-provinces.geojson'));
+    res.json(loadGeoJSON('nepal_updated.geojson'));
 });
 
 /** Trekking routes GeoJSON */
@@ -101,7 +103,7 @@ app.get('/api/search', async (req, res) => {
 
     const nominatimUrl =
         `https://nominatim.openstreetmap.org/search` +
-        `?q=${encodeURIComponent(query + ' Nepal')}` +
+        `?q=${encodeURIComponent(query)}` +
         `&format=geojson&limit=${limit}&addressdetails=1`;
 
     try {
@@ -221,7 +223,9 @@ app.get('/health', (_req, res) => {
     res.json({
         status: 'ok',
         service: 'EverestMap API',
-        version: '1.0.0',
+        version: '1.2.0',
+        license: 'MIT',
+        copyright: '© 2025 EverestMap Project. All rights reserved.',
         timestamp: new Date().toISOString()
     });
 });

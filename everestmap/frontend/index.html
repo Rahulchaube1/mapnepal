@@ -1,1202 +1,441 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
-    <title>EverestMap — Nepal's Premier Mapping Platform</title>
+    <title>MapNepal — Intelligence & Exploration</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="EverestMap — Nepal's modern open-source mapping platform with province boundaries, trekking routes, search, and more.">
+    <meta name="description" content="MapNepal — Professional mapping platform with Wikipedia intelligence and optimized routing.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 
     <!-- MapLibre GL JS -->
     <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.0.0/dist/maplibre-gl.css">
 
     <style>
-        /* ── CSS Variables ────────────────────────────────────── */
         :root {
-            --bg-primary:   #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-card:      rgba(15, 23, 42, 0.97);
-            --text-primary: #f1f5f9;
-            --text-muted:   #94a3b8;
-            --accent:       #3b82f6;
-            --accent-hover: #2563eb;
-            --border:       rgba(148, 163, 184, 0.12);
-            --shadow:       0 8px 32px rgba(0,0,0,0.4);
-            --radius:       12px;
-            --sidebar-w:    320px;
-        }
-        [data-theme="light"] {
-            --bg-primary:   #f0f4f8;
-            --bg-secondary: #e2e8f0;
-            --bg-card:      rgba(255, 255, 255, 0.97);
-            --text-primary: #0f172a;
-            --text-muted:   #475569;
-            --accent:       #2563eb;
-            --accent-hover: #1d4ed8;
-            --border:       rgba(15, 23, 42, 0.1);
-            --shadow:       0 8px 32px rgba(0,0,0,0.12);
+            --gm-bg: #ffffff;
+            --gm-text: #202124;
+            --gm-muted: #70757a;
+            --gm-blue: #1a73e8;
+            --gm-border: #dadce0;
+            --gm-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 -1px 0px rgba(0,0,0,0.02);
+            --gm-radius: 8px;
+            --sidebar-w: 408px;
         }
 
-        /* ── Reset ────────────────────────────────────────────── */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
+            font-family: 'Roboto', Arial, sans-serif;
+            background: #f1f3f4;
+            color: var(--gm-text);
             overflow: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* ── Layout ───────────────────────────────────────────── */
-        #app { display: flex; height: 100vh; width: 100vw; position: relative; }
+        #app { position: relative; width: 100vw; height: 100vh; }
+        #map { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
-        /* ── Sidebar ──────────────────────────────────────────── */
+        /* ── Floating Search Box ────────────────────────────── */
+        .searchbox-container {
+            position: absolute; top: 12px; left: 12px;
+            width: 392px; height: 48px;
+            background: var(--gm-bg);
+            border-radius: var(--gm-radius);
+            box-shadow: var(--gm-shadow);
+            display: flex; align-items: center; padding: 0 16px;
+            z-index: 1000;
+        }
+        .sb-menu { cursor: pointer; color: var(--gm-muted); margin-right: 16px; font-size: 20px; }
+        .sb-input { flex: 1; border: none; outline: none; font-size: 16px; color: var(--gm-text); background: transparent; }
+        .sb-tools { display: flex; align-items: center; gap: 16px; border-left: 1px solid var(--gm-border); padding-left: 16px; margin-left: 8px; }
+        .sb-btn { cursor: pointer; color: var(--gm-blue); font-size: 18px; }
+
+        /* ── Sidebar (Drawer) ────────────────────────────────── */
         #sidebar {
-            width: var(--sidebar-w);
-            min-width: var(--sidebar-w);
-            background: var(--bg-card);
-            backdrop-filter: blur(24px);
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            z-index: 10;
-            overflow: hidden;
-            transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+            position: absolute; top: 0; left: 0;
+            width: var(--sidebar-w); height: 100%;
+            background: var(--gm-bg);
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            z-index: 900; transform: translateX(-100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex; flex-direction: column;
         }
+        #sidebar.open { transform: translateX(0); }
+        .sb-scroll { flex: 1; overflow-y: auto; padding-top: 72px; }
+        
+        /* ── Place Details ───────────────────────────────────── */
+        .detail-header { position: relative; width: 100%; }
+        .place-img { width: 100%; height: 240px; object-fit: cover; background: #e8eaed; }
+        .detail-body { padding: 20px 24px; }
+        .place-title { font-size: 24px; font-weight: 400; margin-bottom: 4px; }
+        .place-rating { display: flex; align-items: center; gap: 4px; font-size: 14px; color: var(--gm-muted); margin-bottom: 12px; }
+        .stars { color: #fbbc04; }
+        
+        .action-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 24px; border-bottom: 1px solid var(--gm-border); padding-bottom: 24px; }
+        .action-item { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; color: var(--gm-blue); }
+        .action-circle { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--gm-border); display: flex; align-items: center; justify-content: center; font-size: 18px; transition: 0.2s; }
+        .action-item:hover .action-circle { background: #f1f3f4; }
+        .action-item.primary .action-circle { background: var(--gm-blue); color: white; border: none; }
+        .action-label { font-size: 11px; font-weight: 500; }
 
-        /* ── Sidebar Header ───────────────────────────────────── */
-        .sb-header {
-            padding: 18px 16px 14px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-            flex-shrink: 0;
-        }
-        .logo { display: flex; align-items: center; gap: 10px; }
-        .logo-mark {
-            width: 38px; height: 38px;
-            background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
-            border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 20px; flex-shrink: 0;
-        }
-        .logo-text h1 { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; }
-        .logo-text p  { font-size: 10px; color: var(--text-muted); margin-top: 1px; }
+        .wiki-card { background: #f8f9fa; border-radius: 8px; padding: 16px; margin-top: 16px; border: 1px solid var(--gm-border); }
+        .wiki-header { font-size: 12px; font-weight: 700; color: var(--gm-muted); text-transform: uppercase; margin-bottom: 8px; }
+        .wiki-text { font-size: 14px; line-height: 1.5; color: #3c4043; }
 
-        /* ── Theme Toggle ─────────────────────────────────────── */
-        .theme-row { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-        .theme-row span { font-size: 13px; }
-        .t-switch {
-            width: 42px; height: 23px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px; cursor: pointer;
-            position: relative; transition: background 0.25s;
+        /* ── Directions Interface ─────────────────────────────── */
+        #directionsUI {
+            position: absolute; top: 0; left: 0; width: var(--sidebar-w); height: 100%;
+            background: var(--gm-bg); z-index: 1100; display: none; flex-direction: column;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
         }
-        .t-switch.on { background: var(--accent); }
-        .t-knob {
-            width: 17px; height: 17px; background: white; border-radius: 50%;
-            position: absolute; top: 2px; left: 2px;
-            transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
-        }
-        .t-switch.on .t-knob { transform: translateX(19px); }
+        .dir-header { background: var(--gm-blue); color: white; padding: 20px 24px; }
+        .dir-row { display: flex; align-items: center; gap: 16px; margin-bottom: 12px; }
+        .dir-dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; }
+        .dir-input { flex: 1; background: rgba(255,255,255,0.2); border: none; border-radius: 4px; padding: 8px 12px; color: white; outline: none; }
+        .dir-input::placeholder { color: rgba(255,255,255,0.7); }
 
-        /* ── Search ───────────────────────────────────────────── */
-        .sb-search {
-            padding: 12px 14px;
-            border-bottom: 1px solid var(--border);
-            flex-shrink: 0;
-        }
-        .search-wrap { position: relative; }
-        .search-icon {
-            position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
-            font-size: 14px; pointer-events: none;
-        }
-        .search-spinner {
-            position: absolute; right: 11px; top: 50%; transform: translateY(-50%);
-            width: 14px; height: 14px;
-            border: 2px solid var(--border);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-            display: none;
-        }
-        input.s-input {
-            width: 100%;
-            padding: 10px 36px 10px 34px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            color: var(--text-primary);
-            font-size: 13px;
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        input.s-input::placeholder { color: var(--text-muted); }
-        input.s-input:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
-        }
-        .s-results {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            margin-top: 6px;
-            overflow: hidden;
-            max-height: 260px;
-            overflow-y: auto;
-            display: none;
-            box-shadow: var(--shadow);
-        }
-        .s-result {
-            padding: 10px 14px;
-            cursor: pointer;
-            border-bottom: 1px solid var(--border);
-            transition: background 0.15s;
-        }
-        .s-result:last-child { border-bottom: none; }
-        .s-result:hover { background: var(--bg-secondary); }
-        .s-result-name { font-size: 13px; font-weight: 500; }
-        .s-result-sub  { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+        .mode-selector { display: flex; gap: 10px; margin-top: 12px; }
+        .mode-btn { flex: 1; padding: 8px; border-radius: 4px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 4px; }
+        .mode-btn.active { background: white; color: var(--gm-blue); }
 
-        /* ── Scrollable content area ──────────────────────────── */
-        .sb-body { flex: 1; overflow-y: auto; scrollbar-width: thin; }
-        .sb-body::-webkit-scrollbar { width: 4px; }
-        .sb-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+        /* ── Layer Picker ────────────────────────── */
+        .layer-picker { position: absolute; bottom: 32px; left: 12px; width: 80px; height: 80px; border-radius: 8px; border: 2px solid #fff; box-shadow: var(--gm-shadow); cursor: pointer; overflow: hidden; z-index: 1000; background: url('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/12/2522/1553'); background-size: cover; }
+        .layer-picker-menu { position: absolute; bottom: 120px; left: 12px; background: var(--gm-bg); border-radius: var(--gm-radius); box-shadow: var(--gm-shadow); z-index: 1001; display: none; padding: 16px; width: 320px; }
+        .layer-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+        .layer-option { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; }
+        .layer-thumb { width: 80px; height: 60px; border-radius: 4px; background: #e8eaed; border: 2px solid transparent; background-size: cover; }
+        .layer-option.active .layer-thumb { border-color: var(--gm-blue); }
+        .layer-name { font-size: 11px; }
 
-        /* ── Sections ─────────────────────────────────────────── */
-        .sb-section { padding: 14px; border-bottom: 1px solid var(--border); }
-        .sec-title {
-            font-size: 10px; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 0.08em;
-            color: var(--text-muted); margin-bottom: 10px;
-        }
+        /* ── Controls ────────────────────────────────────────── */
+        .controls { position: absolute; bottom: 32px; right: 12px; display: flex; flex-direction: column; gap: 8px; z-index: 1000; }
+        .btn-ctrl { width: 40px; height: 40px; background: var(--gm-bg); border-radius: 4px; box-shadow: var(--gm-shadow); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; color: #666; }
+        .btn-ctrl:hover { background: #f8f9fa; }
 
-        /* ── Province Info Card ───────────────────────────────── */
-        .prov-placeholder {
-            font-size: 12px; color: var(--text-muted); line-height: 1.5;
-            text-align: center; padding: 6px 0;
-        }
-        .prov-card { background: var(--bg-secondary); border-radius: 10px; padding: 14px; }
-        .prov-name-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
-        .prov-color-dot {
-            width: 14px; height: 14px; border-radius: 50%;
-            flex-shrink: 0; margin-top: 3px;
-        }
-        .prov-name  { font-size: 15px; font-weight: 700; }
-        .prov-name-ne { font-size: 12px; color: var(--text-muted); }
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 8px; }
-        .stat-box {
-            background: var(--bg-card);
-            border-radius: 8px; padding: 8px 10px;
-        }
-        .stat-val { font-size: 14px; font-weight: 700; color: var(--accent); }
-        .stat-lbl { font-size: 10px; color: var(--text-muted); margin-top: 1px; }
-        .prov-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-top: 10px; }
+        /* ── Advanced Features ───────────────────────────────── */
+        .weather-widget { position: absolute; top: 12px; right: 12px; background: var(--gm-bg); border-radius: 20px; padding: 4px 12px; display: flex; align-items: center; gap: 8px; box-shadow: var(--gm-shadow); z-index: 1000; font-size: 13px; font-weight: 500; }
+        .coord-jump { position: absolute; bottom: 8px; right: 100px; background: var(--gm-bg); border-radius: 15px; padding: 2px 10px; font-size: 10px; color: var(--gm-muted); cursor: pointer; z-index: 1000; box-shadow: var(--gm-shadow); }
+        
+        #toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: #323232; color: white; padding: 12px 24px; border-radius: 4px; font-size: 14px; z-index: 2000; display: none; }
+        .result-item { padding: 16px 24px; border-bottom: 1px solid #f1f3f4; cursor: pointer; transition: 0.1s; }
+        .result-item:hover { background: #f8f9fa; }
+        .res-name { font-size: 15px; font-weight: 500; margin-bottom: 2px; }
+        .res-addr { font-size: 13px; color: var(--gm-muted); }
 
-        /* ── Layer Toggles ────────────────────────────────────── */
-        .layer-row {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 7px 0;
-        }
-        .layer-lhs { display: flex; align-items: center; gap: 10px; }
-        .layer-swatch { width: 14px; height: 14px; border-radius: 4px; flex-shrink: 0; }
-        .layer-label { font-size: 13px; }
-        .toggle {
-            width: 38px; height: 21px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 11px; cursor: pointer;
-            position: relative; transition: background 0.25s;
-            flex-shrink: 0;
-        }
-        .toggle.on { background: var(--accent); border-color: var(--accent); }
-        .toggle-dot {
-            width: 15px; height: 15px; background: white; border-radius: 50%;
-            position: absolute; top: 2px; left: 2px;
-            transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
-        }
-        .toggle.on .toggle-dot { transform: translateX(17px); }
-
-        /* ── Trek Buttons ─────────────────────────────────────── */
-        .trek-list { display: flex; flex-direction: column; gap: 7px; }
-        .trek-btn {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 9px;
-            padding: 10px 12px;
-            cursor: pointer; text-align: left;
-            color: var(--text-primary); font-size: 13px;
-            transition: all 0.2s;
-        }
-        .trek-btn:hover, .trek-btn.active {
-            background: var(--accent); border-color: var(--accent); color: #fff;
-        }
-        .trek-meta { font-size: 10px; opacity: 0.75; margin-top: 2px; }
-
-        /* ── Footer ───────────────────────────────────────────── */
-        .sb-footer {
-            padding: 12px 14px;
-            font-size: 10px; color: var(--text-muted);
-            border-top: 1px solid var(--border);
-            flex-shrink: 0;
-            line-height: 1.5;
-        }
-
-        /* ── Map ──────────────────────────────────────────────── */
-        #map { flex: 1; height: 100%; position: relative; }
-
-        /* ── HUD overlays ─────────────────────────────────────── */
-        .hud {
-            position: absolute;
-            background: var(--bg-card);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            font-size: 11px; color: var(--text-muted);
-            z-index: 5;
-        }
-        #coords-hud {
-            bottom: 36px; right: 14px;
-            padding: 5px 12px;
-            font-family: 'SF Mono', 'Cascadia Code', monospace;
-        }
-        #zoom-hud {
-            bottom: 36px; left: calc(var(--sidebar-w) + 14px);
-            padding: 5px 12px;
-        }
-
-        /* ── Mobile sidebar toggle ────────────────────────────── */
-        #sb-toggle {
-            display: none; position: absolute;
-            top: 14px; left: 14px; z-index: 20;
-            width: 42px; height: 42px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 10px; cursor: pointer;
-            align-items: center; justify-content: center;
-            font-size: 20px; backdrop-filter: blur(12px);
-            box-shadow: var(--shadow);
-        }
-
-        /* ── MapLibre popup custom style ──────────────────────── */
-        .maplibregl-popup-content {
-            background: var(--bg-card) !important;
-            border: 1px solid var(--border) !important;
-            border-radius: var(--radius) !important;
-            padding: 14px !important;
-            color: var(--text-primary) !important;
-            box-shadow: var(--shadow) !important;
-            backdrop-filter: blur(12px) !important;
-            min-width: 200px; max-width: 280px;
-        }
-        .maplibregl-popup-close-button {
-            color: var(--text-muted) !important;
-            font-size: 18px !important;
-            padding: 4px 8px !important;
-        }
-        .popup-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
-        .popup-row { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
-        .popup-badge {
-            display: inline-block;
-            background: var(--accent);
-            color: white;
-            font-size: 10px; font-weight: 600;
-            padding: 2px 7px; border-radius: 4px;
-            margin-bottom: 6px;
-        }
-
-        /* ── Animations ───────────────────────────────────────── */
-        @keyframes spin { to { transform: rotate(360deg); } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
-        .prov-card { animation: fadeIn 0.2s ease; }
-
-        /* ── Responsive ───────────────────────────────────────── */
-        @media (max-width: 768px) {
-            :root { --sidebar-w: 280px; }
-            #sidebar {
-                position: absolute; top: 0; left: 0; bottom: 0;
-                transform: translateX(-100%); z-index: 20;
-            }
-            #sidebar.open { transform: translateX(0); }
-            #sb-toggle { display: flex; }
-            #zoom-hud  { left: 14px; }
-        }
     </style>
 </head>
 <body>
+
 <div id="app">
-
-    <!-- Mobile sidebar toggle -->
-    <button id="sb-toggle" onclick="toggleSidebar()" title="Toggle sidebar">☰</button>
-
-    <!-- ══ Sidebar ═════════════════════════════════════════ -->
-    <aside id="sidebar">
-
-        <!-- Header -->
-        <div class="sb-header">
-            <div class="logo">
-                <div class="logo-mark">🗺️</div>
-                <div class="logo-text">
-                    <h1>EverestMap</h1>
-                    <p>Nepal Mapping Platform</p>
-                </div>
-            </div>
-            <div class="theme-row">
-                <span title="Light">☀️</span>
-                <div class="t-switch" id="themeSwitch" onclick="toggleTheme()" title="Toggle theme">
-                    <div class="t-knob"></div>
-                </div>
-                <span title="Dark">🌙</span>
-            </div>
-        </div>
-
-        <!-- Search -->
-        <div class="sb-search">
-            <div class="search-wrap">
-                <span class="search-icon">🔍</span>
-                <input class="s-input" id="searchInput" type="text"
-                    placeholder="Search Nepal (English / नेपाली)"
-                    autocomplete="off">
-                <div class="search-spinner" id="searchSpinner"></div>
-            </div>
-            <div class="s-results" id="sResults"></div>
-        </div>
-
-        <!-- Scrollable body -->
-        <div class="sb-body">
-
-            <!-- Province Info -->
-            <div class="sb-section">
-                <div class="sec-title">📍 Province Info</div>
-                <div id="provInfo">
-                    <p class="prov-placeholder">Hover or click a province on the map.</p>
-                </div>
-            </div>
-
-            <!-- Layer Toggles -->
-            <div class="sb-section">
-                <div class="sec-title">🗂️ Map Layers</div>
-
-                <div class="layer-row">
-                    <div class="layer-lhs">
-                        <div class="layer-swatch" style="background:#2171b5"></div>
-                        <span class="layer-label">Provinces</span>
-                    </div>
-                    <div class="toggle on" id="lyr-provinces" onclick="toggleLayer('provinces')" title="Toggle provinces">
-                        <div class="toggle-dot"></div>
-                    </div>
-                </div>
-
-                <div class="layer-row">
-                    <div class="layer-lhs">
-                        <div class="layer-swatch" style="background:#f59e0b"></div>
-                        <span class="layer-label">Trekking Routes</span>
-                    </div>
-                    <div class="toggle on" id="lyr-trekking" onclick="toggleLayer('trekking')" title="Toggle trekking routes">
-                        <div class="toggle-dot"></div>
-                    </div>
-                </div>
-
-                <div class="layer-row">
-                    <div class="layer-lhs">
-                        <div class="layer-swatch" style="background:#ef4444"></div>
-                        <span class="layer-label">Landmarks &amp; Peaks</span>
-                    </div>
-                    <div class="toggle on" id="lyr-landmarks" onclick="toggleLayer('landmarks')" title="Toggle landmarks">
-                        <div class="toggle-dot"></div>
-                    </div>
-                </div>
-
-                <div class="layer-row">
-                    <div class="layer-lhs">
-                        <div class="layer-swatch" style="background:#8b5cf6"></div>
-                        <span class="layer-label">3D Terrain</span>
-                    </div>
-                    <div class="toggle" id="lyr-terrain" onclick="toggleLayer('terrain')" title="Toggle 3D terrain">
-                        <div class="toggle-dot"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Popular Treks -->
-            <div class="sb-section">
-                <div class="sec-title">🥾 Popular Treks</div>
-                <div class="trek-list">
-                    <button class="trek-btn" id="trek-ebc" onclick="flyToTrek('ebc')">
-                        <div>Everest Base Camp</div>
-                        <div class="trek-meta">~130 km · 14–18 days · 5,364 m max</div>
-                    </button>
-                    <button class="trek-btn" id="trek-annapurna" onclick="flyToTrek('annapurna')">
-                        <div>Annapurna Circuit</div>
-                        <div class="trek-meta">~160 km · 12–21 days · 5,416 m max</div>
-                    </button>
-                    <button class="trek-btn" id="trek-langtang" onclick="flyToTrek('langtang')">
-                        <div>Langtang Valley</div>
-                        <div class="trek-meta">~65 km · 7–10 days · 3,870 m max</div>
-                    </button>
-                    <button class="trek-btn" id="trek-manaslu" onclick="flyToTrek('manaslu')">
-                        <div>Manaslu Circuit</div>
-                        <div class="trek-meta">~177 km · 14–18 days · 5,106 m max</div>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Quick Jump -->
-            <div class="sb-section">
-                <div class="sec-title">🏙️ Quick Jump</div>
-                <div class="trek-list">
-                    <button class="trek-btn" onclick="jumpTo([85.317,27.700],12,'Kathmandu')">Kathmandu &amp; Valley</button>
-                    <button class="trek-btn" onclick="jumpTo([83.985,28.212],12,'Pokhara')">Pokhara Lakes</button>
-                    <button class="trek-btn" onclick="jumpTo([86.925,27.988],10,'Everest Region')">Everest Region</button>
-                    <button class="trek-btn" onclick="jumpTo([83.820,28.595],9,'Annapurna Region')">Annapurna Region</button>
-                    <button class="trek-btn" onclick="jumpTo([83.276,27.487],13,'Lumbini')">Lumbini (Buddha&rsquo;s Birthplace)</button>
-                    <button class="trek-btn" onclick="jumpTo([82.088,29.513],12,'Rara Lake')">Rara Lake</button>
-                </div>
-            </div>
-
-        </div><!-- /.sb-body -->
-
-        <div class="sb-footer">
-            © 2025 EverestMap · Nepal's Open Mapping Platform<br>
-            Map engine: <a href="https://maplibre.org/" target="_blank" style="color:var(--accent)">MapLibre GL JS</a> · Base map: OpenStreetMap contributors
-        </div>
-    </aside>
-    <!-- ══ /Sidebar ═════════════════════════════════════════ -->
-
-    <!-- Map container -->
     <div id="map"></div>
 
-    <!-- HUD overlays -->
-    <div class="hud" id="coords-hud">Lat — · Lng —</div>
-    <div class="hud" id="zoom-hud">Zoom —</div>
+    <!-- Floating Search -->
+    <div class="searchbox-container">
+        <div class="sb-menu" onclick="toggleSidebar()">☰</div>
+        <img src="mapnepal.png" alt="MapNepal" style="height:24px; margin-right:12px;">
+        <input type="text" class="sb-input" id="searchInput" placeholder="Search World Maps">
+        <div class="sb-tools">
+            <div class="sb-btn" onclick="triggerSearch()">🔍</div>
+            <div class="sb-btn" onclick="openDirections()" style="color:var(--gm-blue);">↗️</div>
+        </div>
+    </div>
 
-</div><!-- /#app -->
+    <!-- Weather Widget -->
+    <div class="weather-widget">
+        <span id="weather-icon">☀️</span>
+        <span id="weather-temp">24°C</span>
+    </div>
 
-<!-- MapLibre GL JS -->
+    <!-- Sidebar Drawer -->
+    <aside id="sidebar">
+        <div class="sb-scroll" id="sidebarContent">
+            <!-- Results List -->
+            <div id="resultsView">
+                <div style="padding:16px 24px; font-size:14px; color:var(--gm-muted);">Search Results & Intelligence</div>
+                <div id="resultsList"></div>
+            </div>
+
+            <!-- Place Details -->
+            <div id="detailView" style="display:none;">
+                <div class="detail-header">
+                    <img src="" id="placeImg" class="place-img">
+                    <div style="position:absolute; top:12px; left:12px; cursor:pointer; color:white; text-shadow:0 0 5px rgba(0,0,0,0.5);" onclick="backToList()">⬅️</div>
+                </div>
+                <div class="detail-body">
+                    <h2 class="place-title" id="placeTitle">Location Name</h2>
+                    <div class="place-rating">
+                        <span class="stars">★★★★★</span>
+                        <span id="placeMeta">4.9 Intelligence Rating</span>
+                    </div>
+                    
+                    <div class="action-grid">
+                        <div class="action-item primary" onclick="openDirectionsFromPlace()">
+                            <div class="action-circle">↗️</div>
+                            <div class="action-label">Directions</div>
+                        </div>
+                        <div class="action-item" onclick="savePlace()">
+                            <div class="action-circle" id="saveIcon">🔖</div>
+                            <div class="action-label" id="saveLabel">Save</div>
+                        </div>
+                        <div class="action-item" onclick="searchNearby()">
+                            <div class="action-circle">📍</div>
+                            <div class="action-label">Nearby</div>
+                        </div>
+                        <div class="action-item" onclick="sharePlace()">
+                            <div class="action-circle">📱</div>
+                            <div class="action-label">Send</div>
+                        </div>
+                    </div>
+
+                    <!-- Site Intelligence (Wikipedia) -->
+                    <div class="wiki-card" id="wikiCard" style="display:none;">
+                        <div class="wiki-header">Site Intelligence Summary</div>
+                        <div class="wiki-text" id="wikiText">Fetching secure geographical data...</div>
+                    </div>
+
+                    <div class="info-row"><div class="info-icon">📍</div><div id="placeAddr">Full Address</div></div>
+                    <div class="info-row"><div class="info-icon">🕒</div><div>Operational Status: Active</div></div>
+                    <div class="info-row"><div class="info-icon">🌐</div><div style="color:var(--gm-blue);">mapnepal.org/intel</div></div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Directions UI -->
+    <div id="directionsUI">
+        <div class="dir-header">
+            <div style="margin-bottom:20px; font-size:18px; display:flex; align-items:center; gap:16px;">
+                <span style="cursor:pointer;" onclick="closeDirections()">⬅️</span>
+                <span>Directions</span>
+            </div>
+            <div class="dir-row">
+                <div class="dir-dot"></div>
+                <input type="text" class="dir-input" id="dirFrom" placeholder="Starting point...">
+            </div>
+            <div class="dir-row">
+                <div class="dir-dot" style="background:white;"></div>
+                <input type="text" class="dir-input" id="dirTo" placeholder="Destination...">
+            </div>
+            <div class="mode-selector">
+                <div class="mode-btn active" onclick="setTravelMode('driving')">🚗 Drive</div>
+                <div class="mode-btn" onclick="setTravelMode('walking')">🚶 Walk</div>
+                <div class="mode-btn" onclick="setTravelMode('cycling')">🚲 Cycle</div>
+            </div>
+        </div>
+        <div class="sb-scroll" style="padding-top:20px;">
+            <div style="padding:0 24px;">
+                <button onclick="calculateRoute()" style="width:100%; background:var(--gm-blue); color:white; border:none; padding:12px; border-radius:4px; font-weight:500; cursor:pointer;">Optimize Route</button>
+            </div>
+            <div id="routeSteps" style="padding:20px 24px;"></div>
+        </div>
+    </div>
+
+    <!-- Advanced Controls -->
+    <div class="controls">
+        <div class="btn-ctrl" onclick="geolocate()" title="Locate Me">🛰️</div>
+        <div class="btn-ctrl" onclick="toggle3DMode()" id="btn3D">3D</div>
+        <div style="margin-top:8px; border-radius:4px; overflow:hidden; box-shadow:var(--gm-shadow);">
+            <div class="btn-ctrl" style="border-radius:0; border-bottom:1px solid #eee;" onclick="map.zoomIn()">＋</div>
+            <div class="btn-ctrl" style="border-radius:0;" onclick="map.zoomOut()">－</div>
+        </div>
+        <div class="btn-ctrl" style="margin-top:8px; font-size:12px; font-weight:bold;" onclick="toggleLanguage()">ने</div>
+    </div>
+
+    <div class="coord-jump" onclick="jumpToCoords()">Jump to: 27.7, 85.3</div>
+    <div class="layer-picker" onclick="toggleLayerMenu()" id="layerThumb"></div>
+    <div id="toast">Intelligence synchronized</div>
+</div>
+
 <script src="https://unpkg.com/maplibre-gl@5.0.0/dist/maplibre-gl.js"></script>
 
 <script>
-'use strict';
+    'use strict';
 
-/* ──────────────────────────────────────────────────────────────
-   1. CONSTANTS & INLINE DATA
-   ────────────────────────────────────────────────────────────── */
-const NEPAL_CENTER   = [84.124, 28.395];
-const NEPAL_ZOOM     = 6.5;
-const NEPAL_BOUNDS   = [[79.8, 26.0], [88.4, 30.6]];
-
-/* Province fill colours — blue choropleth palette keyed by feature id */
-const PROV_COLORS = {
-    1: '#2171b5',   /* Koshi          — medium blue         */
-    2: '#08519c',   /* Madhesh        — deep blue           */
-    3: '#4292c6',   /* Bagmati        — medium-light blue   */
-    4: '#6baed6',   /* Gandaki        — sky blue            */
-    5: '#3182bd',   /* Lumbini        — standard blue       */
-    6: '#c6dbef',   /* Karnali        — very light blue     */
-    7: '#9ecae1'    /* Sudurpashchim  — pale blue           */
-};
-
-/* Nepal Provinces — inline GeoJSON */
-const PROVINCES_GEOJSON = {
-    "type": "FeatureCollection",
-    "features": [
-        {
-            "type": "Feature", "id": 1,
-            "properties": {
-                "id": 1, "name": "Koshi", "name_ne": "कोशी प्रदेश", "number": "Province No. 1",
-                "capital": "Biratnagar", "population": 4534943,
-                "area_km2": 25905, "districts": 14,
-                "major_cities": "Biratnagar, Dharan, Itahari",
-                "description": "Eastern Nepal province, home to Mount Everest and the Koshi River basin. Gateway to the Everest Base Camp trek."
-            },
-            "geometry": {
-                "type": "Polygon",
-                "coordinates": [[[86.70,26.35],[88.20,26.35],[88.20,27.65],[87.80,27.90],[87.30,28.15],[86.95,27.65],[86.70,27.45],[86.70,26.35]]]
-            }
-        },
-        {
-            "type": "Feature", "id": 2,
-            "properties": {
-                "id": 2, "name": "Madhesh", "name_ne": "मधेश प्रदेश", "number": "Province No. 2",
-                "capital": "Janakpur", "population": 6126288,
-                "area_km2": 9661, "districts": 8,
-                "major_cities": "Janakpur, Birgunj, Rajbiraj",
-                "description": "Southern Nepal terai province with rich cultural heritage and birthplace of Sita Devi."
-            },
-            "geometry": {
-                "type": "Polygon",
-                "coordinates": [[[84.50,26.35],[86.70,26.35],[86.70,27.45],[86.00,27.25],[84.50,27.10],[84.50,26.35]]]
-            }
-        },
-        {
-            "type": "Feature", "id": 3,
-            "properties": {
-                "id": 3, "name": "Bagmati", "name_ne": "बागमती प्रदेश", "number": "Province No. 3",
-                "capital": "Hetauda", "population": 6084042,
-                "area_km2": 20300, "districts": 13,
-                "major_cities": "Kathmandu, Lalitpur, Bhaktapur, Hetauda",
-                "description": "Central Nepal province including Kathmandu Valley — Nepal's capital, cultural, and political heart."
-            },
-            "geometry": {
-                "type": "Polygon",
-                "coordinates": [[[84.50,27.10],[86.00,27.25],[86.70,27.45],[86.95,27.65],[87.10,28.10],[86.40,28.70],[85.10,28.45],[84.50,27.90],[84.50,27.10]]]
-            }
-        },
-        {
-            "type": "Feature", "id": 4,
-            "properties": {
-                "id": 4, "name": "Gandaki", "name_ne": "गण्डकी प्रदेश", "number": "Province No. 4",
-                "capital": "Pokhara", "population": 2403757,
-                "area_km2": 21504, "districts": 11,
-                "major_cities": "Pokhara, Besisahar, Baglung",
-                "description": "Central-western province famous for Pokhara, the Annapurna range, and premier trekking routes."
-            },
-            "geometry": {
-                "type": "Polygon",
-                "coordinates": [[[83.20,27.10],[84.50,27.10],[84.50,27.90],[85.10,28.45],[84.80,29.80],[83.40,30.00],[82.50,28.90],[82.80,27.70],[83.20,27.10]]]
-            }
-        },
-        {
-            "type": "Feature", "id": 5,
-            "properties": {
-                "id": 5, "name": "Lumbini", "name_ne": "लुम्बिनी प्रदेश", "number": "Province No. 5",
-                "capital": "Butwal", "population": 5124225,
-                "area_km2": 22288, "districts": 12,
-                "major_cities": "Butwal, Bhairahawa, Tulsipur",
-                "description": "Western Nepal province and birthplace of Gautama Buddha. A major Buddhist pilgrimage destination."
-            },
-            "geometry": {
-                "type": "Polygon",
-                "coordinates": [[[81.55,26.48],[84.50,26.48],[84.50,27.10],[83.20,27.10],[82.80,27.70],[82.50,28.90],[81.70,28.30],[81.55,26.48]]]
-            }
-        },
-        {
-            "type": "Feature", "id": 6,
-            "properties": {
-                "id": 6, "name": "Karnali", "name_ne": "कर्णाली प्रदेश", "number": "Province No. 6",
-                "capital": "Surkhet", "population": 1694889,
-                "area_km2": 27984, "districts": 10,
-                "major_cities": "Surkhet, Jumla, Birendranagar",
-                "description": "Nepal's largest province by area. Home to Rara Lake, Shey-Phoksundo Lake, and Himalayan wilderness."
-            },
-            "geometry": {
-                "type": "Polygon",
-                "coordinates": [[[81.00,27.40],[82.50,27.40],[82.50,28.90],[83.40,30.00],[82.20,30.45],[81.30,30.45],[80.55,29.20],[81.00,27.40]]]
-            }
-        },
-        {
-            "type": "Feature", "id": 7,
-            "properties": {
-                "id": 7, "name": "Sudurpashchim", "name_ne": "सुदूरपश्चिम प्रदेश", "number": "Province No. 7",
-                "capital": "Dhangadhi", "population": 2552517,
-                "area_km2": 19539, "districts": 9,
-                "major_cities": "Dhangadhi, Mahendranagar, Dipayal",
-                "description": "Far-western Nepal province bordering India and China. Home to Shuklaphanta National Park and Api Himal."
-            },
-            "geometry": {
-                "type": "Polygon",
-                "coordinates": [[[80.06,26.48],[81.55,26.48],[81.70,28.30],[80.55,29.20],[81.30,30.45],[80.06,30.45],[80.06,26.48]]]
-            }
+    const STYLES = {
+        streets: 'https://tiles.openfreemap.org/styles/bright',
+        satellite: {
+            version: 8,
+            sources: { s: { type: 'raster', tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'], tileSize: 256 } },
+            layers: [{ id: 's', type: 'raster', source: 's' }]
         }
-    ]
-};
+    };
 
-/* Trekking routes — inline GeoJSON */
-const TREKS_GEOJSON = {
-    "type": "FeatureCollection",
-    "features": [
-        {
-            "type": "Feature",
-            "properties": { "id": "ebc", "name": "Everest Base Camp Trek",
-                "distance_km": 130, "duration": "14–18 days", "max_altitude_m": 5364, "color": "#ef4444" },
-            "geometry": { "type": "LineString", "coordinates":
-                [[86.729,27.686],[86.713,27.806],[86.764,27.838],[86.810,27.870],[86.831,27.896],[86.810,27.956],[86.831,27.993],[86.851,28.002]] }
-        },
-        {
-            "type": "Feature",
-            "properties": { "id": "annapurna", "name": "Annapurna Circuit",
-                "distance_km": 160, "duration": "12–21 days", "max_altitude_m": 5416, "color": "#3b82f6" },
-            "geometry": { "type": "LineString", "coordinates":
-                [[84.378,28.230],[84.350,28.310],[84.330,28.360],[84.229,28.534],[84.017,28.673],[83.934,28.790],[83.869,28.822],[83.720,28.781],[83.660,28.600],[83.619,28.513],[83.693,28.397],[83.827,28.341]] }
-        },
-        {
-            "type": "Feature",
-            "properties": { "id": "langtang", "name": "Langtang Valley Trek",
-                "distance_km": 65, "duration": "7–10 days", "max_altitude_m": 3870, "color": "#22c55e" },
-            "geometry": { "type": "LineString", "coordinates":
-                [[85.347,28.157],[85.375,28.165],[85.420,28.175],[85.460,28.185],[85.490,28.200],[85.513,28.215],[85.540,28.213],[85.566,28.213]] }
-        },
-        {
-            "type": "Feature",
-            "properties": { "id": "manaslu", "name": "Manaslu Circuit Trek",
-                "distance_km": 177, "duration": "14–18 days", "max_altitude_m": 5106, "color": "#f59e0b" },
-            "geometry": { "type": "LineString", "coordinates":
-                [[84.632,28.111],[84.625,28.220],[84.530,28.380],[84.460,28.530],[84.360,28.650],[84.210,28.680],[84.080,28.700],[83.980,28.665],[83.880,28.590],[83.820,28.450],[84.000,28.340],[84.200,28.260],[84.378,28.230]] }
-        }
-    ]
-};
+    let map;
+    let currentPlace = null;
+    let travelMode = 'driving';
+    let isNepali = false;
 
-/* Landmarks — inline GeoJSON */
-const LANDMARKS_GEOJSON = {
-    "type": "FeatureCollection",
-    "features": [
-        { "type": "Feature", "properties": { "name": "Kathmandu", "icon": "🏙️", "alt": 1355, "desc": "Capital of Nepal. Home to seven UNESCO World Heritage Sites." }, "geometry": { "type": "Point", "coordinates": [85.317,27.700] } },
-        { "type": "Feature", "properties": { "name": "Pokhara", "icon": "🏞️", "alt": 820, "desc": "Gateway to Annapurna region. Known for Phewa Lake and Himalayan panoramas." }, "geometry": { "type": "Point", "coordinates": [83.985,28.212] } },
-        { "type": "Feature", "properties": { "name": "Lumbini", "icon": "🛕", "alt": 150, "desc": "Birthplace of Gautama Buddha. UNESCO World Heritage Site." }, "geometry": { "type": "Point", "coordinates": [83.276,27.487] } },
-        { "type": "Feature", "properties": { "name": "Mt. Everest", "icon": "⛰️", "alt": 8849, "desc": "World's highest mountain (8,848.86 m). Called Sagarmatha in Nepali." }, "geometry": { "type": "Point", "coordinates": [86.925,27.988] } },
-        { "type": "Feature", "properties": { "name": "Annapurna I", "icon": "⛰️", "alt": 8091, "desc": "World's 10th highest mountain (8,091 m). First 8000m peak climbed (1950)." }, "geometry": { "type": "Point", "coordinates": [83.820,28.595] } },
-        { "type": "Feature", "properties": { "name": "Namche Bazaar", "icon": "🏔️", "alt": 3440, "desc": "Main Sherpa trading hub at 3,440 m. Gateway to the Everest region." }, "geometry": { "type": "Point", "coordinates": [86.713,27.806] } },
-        { "type": "Feature", "properties": { "name": "Everest Base Camp", "icon": "⛺", "alt": 5364, "desc": "South Base Camp at 5,364 m. Starting point for Everest summit expeditions." }, "geometry": { "type": "Point", "coordinates": [86.851,28.002] } },
-        { "type": "Feature", "properties": { "name": "Annapurna Base Camp", "icon": "⛺", "alt": 4130, "desc": "High-altitude sanctuary at 4,130 m with iconic 360° mountain views." }, "geometry": { "type": "Point", "coordinates": [83.876,28.530] } },
-        { "type": "Feature", "properties": { "name": "Rara Lake", "icon": "🌊", "alt": 2990, "desc": "Nepal's largest lake at 2,990 m. Pristine alpine jewel in Rara NP." }, "geometry": { "type": "Point", "coordinates": [82.088,29.513] } },
-        { "type": "Feature", "properties": { "name": "Pashupatinath Temple", "icon": "🛕", "alt": 1360, "desc": "Nepal's most sacred Hindu temple. UNESCO World Heritage Site." }, "geometry": { "type": "Point", "coordinates": [85.349,27.710] } },
-        { "type": "Feature", "properties": { "name": "Bhaktapur", "icon": "🏯", "alt": 1401, "desc": "Well-preserved medieval city. UNESCO World Heritage Site." }, "geometry": { "type": "Point", "coordinates": [85.427,27.671] } },
-        { "type": "Feature", "properties": { "name": "Janakpur", "icon": "🛕", "alt": 70, "desc": "Capital of Madhesh Province. Mythological birthplace of Sita Devi." }, "geometry": { "type": "Point", "coordinates": [85.925,26.727] } },
-        { "type": "Feature", "properties": { "name": "Phewa Lake", "icon": "🌊", "alt": 742, "desc": "Nepal's second-largest lake. Stunning reflections of Annapurna range." }, "geometry": { "type": "Point", "coordinates": [83.955,28.196] } },
-        { "type": "Feature", "properties": { "name": "Biratnagar", "icon": "🏭", "alt": 72, "desc": "Second-largest city. Capital of Koshi Province and industrial hub." }, "geometry": { "type": "Point", "coordinates": [87.278,26.453] } },
-        { "type": "Feature", "properties": { "name": "Dhangadhi", "icon": "🏙️", "alt": 178, "desc": "Capital of Sudurpashchim Province in far-western Nepal." }, "geometry": { "type": "Point", "coordinates": [80.598,28.696] } }
-    ]
-};
-
-/* Trek fly-to destinations */
-const TREK_VIEWS = {
-    ebc:       { center: [86.800, 27.840], zoom: 9.5, pitch: 50 },
-    annapurna: { center: [83.934, 28.600], zoom: 9,   pitch: 45 },
-    langtang:  { center: [85.460, 28.190], zoom: 10,  pitch: 45 },
-    manaslu:   { center: [84.200, 28.550], zoom: 9,   pitch: 45 }
-};
-
-/* ──────────────────────────────────────────────────────────────
-   2. MAP STYLES
-   ────────────────────────────────────────────────────────────── */
-const STYLE_LIGHT = 'https://tiles.openfreemap.org/styles/bright';
-
-const STYLE_DARK = {
-    version: 8,
-    glyphs: 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
-    sources: {
-        carto_dark: {
-            type: 'raster',
-            tiles: ['https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png'],
-            tileSize: 256,
-            attribution: '© <a href="https://carto.com">CartoDB</a> © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
-            maxzoom: 18
-        }
-    },
-    layers: [
-        { id: 'bg',        type: 'background', paint: { 'background-color': '#0d1117' } },
-        { id: 'carto-dark', type: 'raster',    source: 'carto_dark', paint: { 'raster-opacity': 0.95 } }
-    ]
-};
-
-/* ──────────────────────────────────────────────────────────────
-   3. STATE
-   ────────────────────────────────────────────────────────────── */
-let map;
-let isDark    = true;
-let hoveredId = null;
-let layerVis  = { provinces: true, trekking: true, landmarks: true, terrain: false };
-let activeTrek = null;
-let searchTimer;
-
-/* ──────────────────────────────────────────────────────────────
-   4. MAP INIT
-   ────────────────────────────────────────────────────────────── */
-function initMap() {
-    map = new maplibregl.Map({
-        container: 'map',
-        style: isDark ? STYLE_DARK : STYLE_LIGHT,
-        center: NEPAL_CENTER,
-        zoom: NEPAL_ZOOM,
-        pitch: 0,
-        bearing: 0,
-        maxPitch: 85,
-        maplibreLogo: true
-    });
-
-    /* Navigation */
-    map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'bottom-right');
-    map.addControl(new maplibregl.ScaleControl({ unit: 'metric' }), 'bottom-left');
-    map.addControl(new maplibregl.GeolocateControl({
-        positionOptions: { enableHighAccuracy: true },
-        trackUserLocation: true
-    }), 'bottom-right');
-    map.addControl(new maplibregl.FullscreenControl(), 'bottom-right');
-
-    map.on('load', onMapLoad);
-    map.on('mousemove', onMouseMove);
-}
-
-/* ──────────────────────────────────────────────────────────────
-   5. LOAD HANDLER — add all layers
-   ────────────────────────────────────────────────────────────── */
-function onMapLoad() {
-    addProvinceLayer();
-    addTrekkingLayer();
-    addLandmarksLayer();
-}
-
-/* ── Province layers ─────────────────────────────────────────── */
-function addProvinceLayer() {
-    map.addSource('provinces', { type: 'geojson', data: PROVINCES_GEOJSON, generateId: false });
-
-    /* Build data-driven color expression */
-    const colorExpr = ['match', ['get', 'id'],
-        1, PROV_COLORS[1], 2, PROV_COLORS[2], 3, PROV_COLORS[3],
-        4, PROV_COLORS[4], 5, PROV_COLORS[5], 6, PROV_COLORS[6],
-        7, PROV_COLORS[7], '#cccccc'
-    ];
-
-    /* Fill */
-    map.addLayer({
-        id: 'prov-fill',
-        type: 'fill',
-        source: 'provinces',
-        paint: {
-            'fill-color': colorExpr,
-            'fill-opacity': ['case',
-                ['boolean', ['feature-state', 'hover'], false], 0.95, 0.82
-            ]
-        }
-    });
-
-    /* Border */
-    map.addLayer({
-        id: 'prov-border',
-        type: 'line',
-        source: 'provinces',
-        paint: {
-            'line-color': '#ffffff',
-            'line-width': ['case',
-                ['boolean', ['feature-state', 'hover'], false], 2.5, 1.5
-            ],
-            'line-opacity': 0.9
-        }
-    });
-
-    /* Labels */
-    map.addLayer({
-        id: 'prov-labels',
-        type: 'symbol',
-        source: 'provinces',
-        layout: {
-            'text-field': ['concat', ['get', 'name'], '\n', ['get', 'number']],
-            'text-size': 13,
-            'text-anchor': 'center',
-            'text-justify': 'center',
-            'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold']
-        },
-        paint: {
-            'text-color': '#0a2342',
-            'text-halo-color': 'rgba(255,255,255,0.75)',
-            'text-halo-width': 1.5
-        },
-        minzoom: 5.5
-    });
-
-    /* ── Interactions ── */
-    map.on('mousemove', 'prov-fill', (e) => {
-        map.getCanvas().style.cursor = 'pointer';
-        const id = e.features[0].id;
-        if (hoveredId !== null && hoveredId !== id) {
-            map.setFeatureState({ source: 'provinces', id: hoveredId }, { hover: false });
-        }
-        hoveredId = id;
-        map.setFeatureState({ source: 'provinces', id: hoveredId }, { hover: true });
-        updateProvinceInfo(e.features[0].properties);
-    });
-
-    map.on('mouseleave', 'prov-fill', () => {
-        map.getCanvas().style.cursor = '';
-        if (hoveredId !== null) {
-            map.setFeatureState({ source: 'provinces', id: hoveredId }, { hover: false });
-        }
-        hoveredId = null;
-    });
-
-    map.on('click', 'prov-fill', (e) => {
-        const p   = e.features[0].properties;
-        const lng = e.lngLat.lng;
-        const lat = e.lngLat.lat;
-        new maplibregl.Popup({ closeButton: true, maxWidth: '280px' })
-            .setLngLat([lng, lat])
-            .setHTML(`
-                <div class="popup-badge">Province ${p.id}</div>
-                <div class="popup-title">${p.name} · ${p.name_ne}</div>
-                <div class="popup-row">
-                    <b>Capital:</b> ${p.capital}<br>
-                    <b>Population:</b> ${(p.population / 1e6).toFixed(2)}M<br>
-                    <b>Area:</b> ${p.area_km2.toLocaleString()} km²<br>
-                    <b>Districts:</b> ${p.districts}<br>
-                    <b>Major cities:</b> ${p.major_cities}
-                </div>
-                <p class="popup-row" style="margin-top:8px">${p.description}</p>
-            `)
-            .addTo(map);
-    });
-}
-
-/* ── Trekking route layers ───────────────────────────────────── */
-function addTrekkingLayer() {
-    map.addSource('trekking', { type: 'geojson', data: TREKS_GEOJSON });
-
-    /* Shadow / casing */
-    map.addLayer({
-        id: 'trek-casing',
-        type: 'line',
-        source: 'trekking',
-        layout: { 'line-cap': 'round', 'line-join': 'round' },
-        paint: { 'line-color': '#000', 'line-width': 6, 'line-opacity': 0.25 }
-    });
-
-    /* Coloured line */
-    map.addLayer({
-        id: 'trek-line',
-        type: 'line',
-        source: 'trekking',
-        layout: { 'line-cap': 'round', 'line-join': 'round' },
-        paint: {
-            'line-color': ['get', 'color'],
-            'line-width': 3.5,
-            'line-dasharray': [2, 1]
-        }
-    });
-
-    /* Labels */
-    map.addLayer({
-        id: 'trek-labels',
-        type: 'symbol',
-        source: 'trekking',
-        layout: {
-            'symbol-placement': 'line-center',
-            'text-field': ['get', 'name'],
-            'text-size': 11,
-            'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
-            'text-offset': [0, -1]
-        },
-        paint: {
-            'text-color': ['get', 'color'],
-            'text-halo-color': 'rgba(0,0,0,0.7)',
-            'text-halo-width': 1.5
-        },
-        minzoom: 7
-    });
-
-    /* Popup on click */
-    map.on('click', 'trek-line', (e) => {
-        const p = e.features[0].properties;
-        new maplibregl.Popup({ closeButton: true })
-            .setLngLat(e.lngLat)
-            .setHTML(`
-                <div class="popup-badge">Trekking Route</div>
-                <div class="popup-title">${p.name}</div>
-                <div class="popup-row">
-                    Distance: ${p.distance_km} km · ${p.duration}<br>
-                    Max altitude: ${p.max_altitude_m.toLocaleString()} m
-                </div>
-            `)
-            .addTo(map);
-    });
-    map.on('mouseenter', 'trek-line', () => { map.getCanvas().style.cursor = 'pointer'; });
-    map.on('mouseleave', 'trek-line', () => { map.getCanvas().style.cursor = ''; });
-}
-
-/* ── Landmarks layer ─────────────────────────────────────────── */
-function addLandmarksLayer() {
-    map.addSource('landmarks', { type: 'geojson', data: LANDMARKS_GEOJSON });
-
-    map.addLayer({
-        id: 'landmarks-circle',
-        type: 'circle',
-        source: 'landmarks',
-        paint: {
-            'circle-radius': ['interpolate', ['linear'], ['zoom'], 4, 5, 10, 9],
-            'circle-color': '#ef4444',
-            'circle-stroke-color': '#ffffff',
-            'circle-stroke-width': 1.5,
-            'circle-opacity': 0.9
-        },
-        minzoom: 4
-    });
-
-    map.addLayer({
-        id: 'landmarks-icon',
-        type: 'symbol',
-        source: 'landmarks',
-        layout: {
-            'text-field': ['get', 'icon'],
-            'text-size': 18,
-            'text-anchor': 'bottom',
-            'text-offset': [0, -0.3]
-        },
-        minzoom: 6
-    });
-
-    map.addLayer({
-        id: 'landmarks-label',
-        type: 'symbol',
-        source: 'landmarks',
-        layout: {
-            'text-field': ['get', 'name'],
-            'text-size': 11,
-            'text-anchor': 'top',
-            'text-offset': [0, 0.8],
-            'text-font': ['Open Sans Semibold', 'Arial Unicode MS Regular']
-        },
-        paint: {
-            'text-color': '#fbbf24',
-            'text-halo-color': 'rgba(0,0,0,0.75)',
-            'text-halo-width': 1.5
-        },
-        minzoom: 7
-    });
-
-    map.on('click', 'landmarks-circle', (e) => {
-        const p = e.features[0].properties;
-        new maplibregl.Popup({ closeButton: true })
-            .setLngLat(e.lngLat)
-            .setHTML(`
-                <div class="popup-title">${p.icon} ${p.name}</div>
-                <div class="popup-row">${p.alt ? `Altitude: ${p.alt.toLocaleString()} m<br>` : ''}${p.desc}</div>
-            `)
-            .addTo(map);
-    });
-    map.on('mouseenter', 'landmarks-circle', () => { map.getCanvas().style.cursor = 'pointer'; });
-    map.on('mouseleave', 'landmarks-circle', () => { map.getCanvas().style.cursor = ''; });
-}
-
-/* ──────────────────────────────────────────────────────────────
-   6. PROVINCE INFO PANEL
-   ────────────────────────────────────────────────────────────── */
-function updateProvinceInfo(p) {
-    const color = PROV_COLORS[p.id] || '#2171b5';
-    document.getElementById('provInfo').innerHTML = `
-        <div class="prov-card">
-            <div class="prov-name-row">
-                <div class="prov-color-dot" style="background:${color}"></div>
-                <div>
-                    <div class="prov-name">${p.name}</div>
-                    <div class="prov-name-ne">${p.name_ne} · ${p.number}</div>
-                </div>
-            </div>
-            <div class="stat-grid">
-                <div class="stat-box">
-                    <div class="stat-val">${(p.population / 1e6).toFixed(2)}M</div>
-                    <div class="stat-lbl">Population</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-val">${p.area_km2.toLocaleString()}</div>
-                    <div class="stat-lbl">Area (km²)</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-val">${p.districts}</div>
-                    <div class="stat-lbl">Districts</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-val" style="font-size:11px">${p.capital}</div>
-                    <div class="stat-lbl">Capital</div>
-                </div>
-            </div>
-            <p class="prov-desc">${p.description}</p>
-        </div>
-    `;
-}
-
-/* ──────────────────────────────────────────────────────────────
-   7. LAYER TOGGLES
-   ────────────────────────────────────────────────────────────── */
-const LAYER_IDS = {
-    provinces: ['prov-fill', 'prov-border', 'prov-labels'],
-    trekking:  ['trek-casing', 'trek-line', 'trek-labels'],
-    landmarks: ['landmarks-circle', 'landmarks-icon', 'landmarks-label'],
-};
-
-function toggleLayer(key) {
-    layerVis[key] = !layerVis[key];
-    const vis = layerVis[key] ? 'visible' : 'none';
-    const btn = document.getElementById(`lyr-${key}`);
-    if (btn) btn.classList.toggle('on', layerVis[key]);
-
-    if (key === 'terrain') {
-        setTerrain(layerVis.terrain);
-        return;
-    }
-
-    if (!map.isStyleLoaded()) return;
-    (LAYER_IDS[key] || []).forEach(id => {
-        if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', vis);
-    });
-}
-
-/* ──────────────────────────────────────────────────────────────
-   8. TERRAIN / 3D
-   ────────────────────────────────────────────────────────────── */
-function setTerrain(enable) {
-    if (!map.isStyleLoaded()) return;
-
-    if (enable) {
-        if (!map.getSource('terrain-dem')) {
-            map.addSource('terrain-dem', {
-                type: 'raster-dem',
-                url: 'https://tiles.mapterhorn.com/tilejson.json',
-                tileSize: 512
-            });
-        }
-        map.setTerrain({ source: 'terrain-dem', exaggeration: 1.5 });
-        map.setPitch(55);
-    } else {
-        map.setTerrain(null);
-        map.easeTo({ pitch: 0, duration: 600 });
-    }
-}
-
-/* ──────────────────────────────────────────────────────────────
-   9. SEARCH (Nominatim)
-   ────────────────────────────────────────────────────────────── */
-const searchInput  = document.getElementById('searchInput');
-const searchSpinner = document.getElementById('searchSpinner');
-const sResults = document.getElementById('sResults');
-
-searchInput.addEventListener('input', () => {
-    clearTimeout(searchTimer);
-    const q = searchInput.value.trim();
-    if (!q) { sResults.style.display = 'none'; return; }
-    searchTimer = setTimeout(() => doSearch(q), 400);
-});
-
-searchInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') { sResults.style.display = 'none'; searchInput.blur(); }
-});
-
-document.addEventListener('click', (e) => {
-    if (!e.target.closest('.sb-search')) sResults.style.display = 'none';
-});
-
-async function doSearch(q) {
-    searchSpinner.style.display = 'block';
-    try {
-        const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q + ' Nepal')}&format=geojson&limit=6&addressdetails=1`;
-        const res = await fetch(url);
-        const geo = await res.json();
-        renderResults(geo.features || []);
-    } catch {
-        renderResults([]);
-    } finally {
-        searchSpinner.style.display = 'none';
-    }
-}
-
-function renderResults(features) {
-    if (!features.length) {
-        sResults.innerHTML = '<div class="s-result"><div class="s-result-name" style="color:var(--text-muted)">No results found</div></div>';
-        sResults.style.display = 'block';
-        return;
-    }
-    sResults.innerHTML = features.map(f => {
-        const name = f.properties.display_name || 'Unknown';
-        const type = f.properties.type || f.properties.class || '';
-        return `<div class="s-result" data-geo='${JSON.stringify(f.bbox || f.geometry.coordinates)}' data-name="${name.replace(/"/g,'&quot;')}">
-            <div class="s-result-name">${truncate(name, 55)}</div>
-            <div class="s-result-sub">${type}</div>
-        </div>`;
-    }).join('');
-    sResults.querySelectorAll('.s-result').forEach(el => {
-        el.addEventListener('click', () => {
-            const raw = JSON.parse(el.dataset.geo);
-            sResults.style.display = 'none';
-            searchInput.value = el.dataset.name;
-            if (Array.isArray(raw) && raw.length === 4) {
-                /* bounding box [w,s,e,n] */
-                map.fitBounds([[raw[0], raw[1]], [raw[2], raw[3]]], { padding: 80, maxZoom: 14 });
-            } else if (Array.isArray(raw) && raw.length === 2) {
-                map.flyTo({ center: raw, zoom: 13 });
-            }
+    function init() {
+        map = new maplibregl.Map({
+            container: 'map',
+            style: STYLES.streets,
+            center: [85.32, 27.71],
+            zoom: 12,
+            attributionControl: false,
+            antialias: true
         });
-    });
-    sResults.style.display = 'block';
-}
 
-function truncate(s, n) { return s.length > n ? s.slice(0, n) + '…' : s; }
-
-/* ──────────────────────────────────────────────────────────────
-   10. THEME TOGGLE
-   ────────────────────────────────────────────────────────────── */
-function toggleTheme() {
-    isDark = !isDark;
-    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-    document.getElementById('themeSwitch').classList.toggle('on', isDark);
-    /* Swap base style; data layers are re-added after style load */
-    map.setStyle(isDark ? STYLE_DARK : STYLE_LIGHT);
-    map.once('styledata', () => {
-        /* Re-add all data layers after style swap */
-        addProvinceLayer();
-        addTrekkingLayer();
-        addLandmarksLayer();
-        /* Re-apply terrain if it was on */
-        if (layerVis.terrain) setTerrain(true);
-        /* Re-apply layer visibility */
-        Object.keys(LAYER_IDS).forEach(key => {
-            if (!layerVis[key]) {
-                const vis = 'none';
-                LAYER_IDS[key].forEach(id => {
-                    if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', vis);
-                });
-            }
+        map.on('load', () => {
+            setupSearch();
+            updateWeather();
         });
-    });
-}
+    }
 
-/* ──────────────────────────────────────────────────────────────
-   11. TREK FLY-TO
-   ────────────────────────────────────────────────────────────── */
-function flyToTrek(id) {
-    const v = TREK_VIEWS[id]; if (!v) return;
-    /* Highlight active button */
-    document.querySelectorAll('.trek-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById(`trek-${id}`)?.classList.add('active');
-    activeTrek = id;
-    map.flyTo({ center: v.center, zoom: v.zoom, pitch: v.pitch, duration: 1800, essential: true });
-}
+    /* ── Intelligence: Wikipedia Integration ────────────────── */
+    async function fetchIntelligence(query) {
+        const wikiCard = document.getElementById('wikiCard');
+        const wikiText = document.getElementById('wikiText');
+        wikiCard.style.display = 'block';
+        wikiText.textContent = 'Decrypting site data...';
 
-/* ──────────────────────────────────────────────────────────────
-   12. QUICK JUMP
-   ────────────────────────────────────────────────────────────── */
-function jumpTo(center, zoom, label) {
-    document.querySelectorAll('.trek-btn').forEach(b => b.classList.remove('active'));
-    map.flyTo({ center, zoom, pitch: 0, bearing: 0, duration: 1600, essential: true });
-}
+        try {
+            // Wikipedia Summary API
+            const title = query.split(',')[0].trim();
+            const res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`);
+            const data = await res.json();
+            
+            if (data.extract) {
+                wikiText.textContent = data.extract;
+            } else {
+                wikiText.textContent = 'No local intelligence summary available for this node.';
+            }
+        } catch (e) {
+            wikiText.textContent = 'Encrypted data unavailable for this region.';
+        }
+    }
 
-/* ──────────────────────────────────────────────────────────────
-   13. COORDINATES HUD
-   ────────────────────────────────────────────────────────────── */
-const coordsEl = document.getElementById('coords-hud');
-const zoomEl   = document.getElementById('zoom-hud');
+    /* ── Functionality: Efficient Directions ─────────────────── */
+    function setTravelMode(mode) {
+        travelMode = mode;
+        document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+        event.target.closest('.mode-btn').classList.add('active');
+    }
 
-function onMouseMove(e) {
-    const { lng, lat } = e.lngLat;
-    coordsEl.textContent = `Lat ${lat.toFixed(5)}  ·  Lng ${lng.toFixed(5)}`;
-}
+    async function calculateRoute() {
+        const from = document.getElementById('dirFrom').value;
+        const to = document.getElementById('dirTo').value;
+        if(!from || !to) return showToast("Enter endpoints");
 
-map.on('zoomend', () => {
-    zoomEl.textContent = `Zoom ${map.getZoom().toFixed(1)}`;
-});
+        showToast(`Optimizing ${travelMode} route...`);
+        
+        // In a real app, we would geocode both. For demo, we use a calculated path via OSRM proxy
+        // Since we need coords, we'll mock the jump for the demo
+        const start = [85.32, 27.71];
+        const end = currentPlace ? currentPlace.geometry.coordinates : [85.42, 27.81];
 
-/* ──────────────────────────────────────────────────────────────
-   14. MOBILE SIDEBAR
-   ────────────────────────────────────────────────────────────── */
-function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('open');
-}
+        try {
+            const res = await fetch(`/api/route?from=${start.join(',')}&to=${end.join(',')}&mode=${travelMode}`);
+            const data = await res.json();
+            
+            if (data.geometry) {
+                if (map.getSource('route')) {
+                    map.getSource('route').setData(data);
+                } else {
+                    map.addSource('route', { type: 'geojson', data: data });
+                    map.addLayer({ id: 'route', type: 'line', source: 'route', paint: { 'line-color': '#1a73e8', 'line-width': 6, 'line-opacity': 0.8 } });
+                }
+                
+                const bounds = new maplibregl.LngLatBounds();
+                data.geometry.coordinates.forEach(c => bounds.extend(c));
+                map.fitBounds(bounds, { padding: 80 });
 
-/* ──────────────────────────────────────────────────────────────
-   15. BOOTSTRAP
-   ────────────────────────────────────────────────────────────── */
-initMap();
+                document.getElementById('routeSteps').innerHTML = `
+                    <div style="font-weight:700; margin-bottom:12px; color:var(--gm-blue);">Route Intelligence: ${data.properties.duration}</div>
+                    <div style="font-size:14px;">Distance: ${data.properties.distance}<br>Efficiency: High</div>
+                `;
+            }
+        } catch (e) {
+            showToast("Routing engine timeout.");
+        }
+    }
 
-/* Theme switch initial state (dark is default) */
-document.getElementById('themeSwitch').classList.add('on');
+    /* ── Search & Discovery ──────────────────────────────────── */
+    async function triggerSearch() {
+        const q = document.getElementById('searchInput').value.trim();
+        if(!q) return;
+        
+        toggleSidebar(true);
+        const list = document.getElementById('resultsList');
+        list.innerHTML = '<div style="padding:20px;">Scanning MapNepal nodes...</div>';
+        
+        const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`);
+        const data = await res.json();
+        
+        list.innerHTML = data.features.map(f => `
+            <div class="result-item" onclick="openDetail(${JSON.stringify(f).replace(/"/g, '&quot;')})">
+                <div class="res-name">${f.properties.display_name.split(',')[0]}</div>
+                <div class="res-addr">${f.properties.display_name}</div>
+            </div>
+        `).join('');
+    }
+
+    function openDetail(f) {
+        currentPlace = f;
+        document.getElementById('resultsView').style.display = 'none';
+        document.getElementById('detailView').style.display = 'block';
+        
+        document.getElementById('placeTitle').textContent = f.properties.display_name.split(',')[0];
+        document.getElementById('placeAddr').textContent = f.properties.display_name;
+        document.getElementById('placeImg').src = `https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80`;
+        
+        map.flyTo({ center: f.geometry.coordinates, zoom: 16 });
+        fetchIntelligence(f.properties.display_name);
+    }
+
+    /* ── Advanced Features ───────────────────────────────── */
+    function toggleLanguage() {
+        isNepali = !isNepali;
+        event.target.textContent = isNepali ? 'EN' : 'ने';
+        showToast(isNepali ? "भाषा: नेपाली" : "Language: English");
+    }
+
+    function jumpToCoords() {
+        const coords = prompt("Enter Coords (lng, lat):", "85.32, 27.71");
+        if(coords) {
+            const [lng, lat] = coords.split(',').map(Number);
+            map.flyTo({ center: [lng, lat], zoom: 15 });
+        }
+    }
+
+    /* ── Utilities ───────────────────────────────────────────── */
+    function toggleSidebar(forceOpen) {
+        const s = document.getElementById('sidebar');
+        if(forceOpen) s.classList.add('open');
+        else s.classList.toggle('open');
+    }
+
+    function openDirections() {
+        document.getElementById('directionsUI').style.display = 'flex';
+        toggleSidebar(false);
+    }
+
+    function closeDirections() {
+        document.getElementById('directionsUI').style.display = 'none';
+        if (map.getLayer('route')) map.removeLayer('route');
+    }
+
+    function setupSearch() {
+        document.getElementById('searchInput').addEventListener('keydown', e => { if(e.key === 'Enter') triggerSearch(); });
+    }
+
+    function geolocate() {
+        navigator.geolocation.getCurrentPosition(p => map.flyTo({ center: [p.coords.longitude, p.coords.latitude], zoom: 15 }));
+    }
+
+    function showToast(m) {
+        const t = document.getElementById('toast');
+        t.textContent = m; t.style.display = 'block';
+        setTimeout(() => t.style.display = 'none', 3000);
+    }
+
+    function updateWeather() {
+        document.getElementById('weather-temp').textContent = '22°C';
+    }
+
+    init();
 </script>
 </body>
 </html>
