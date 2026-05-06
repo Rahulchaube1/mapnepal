@@ -36,7 +36,29 @@
         }
 
         #app { position: relative; width: 100vw; height: 100vh; }
-        #map { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        #map { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; }
+        .globe-space {
+            background: #000 !important;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
+                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px),
+                radial-gradient(rgba(255,255,255,.4), rgba(255,255,255,.1) 2px, transparent 30px) !important;
+            background-size: 550px 550px, 350px 350px, 250px 250px, 150px 150px !important;
+            background-position: 0 0, 40px 60px, 130px 270px, 70px 100px !important;
+            animation: stars-twinkle 100s linear infinite;
+        }
+        @keyframes stars-twinkle {
+            from { background-position: 0 0, 40px 60px, 130px 270px, 70px 100px; }
+            to { background-position: 550px 550px, 390px 410px, 630px 770px, 220px 650px; }
+        }
+        .globe-space::after {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.4) 100%);
+            pointer-events: none;
+        }
+
+
 
         /* ── Floating Search Box ────────────────────────────── */
         .searchbox-container {
@@ -1213,9 +1235,33 @@
     }
 
     function toggleGlobe(enabled) {
-        map.setProjection({ name: enabled ? 'globe' : 'mercator' });
-        showToast(enabled ? "Globe view enabled" : "Mercator view enabled");
+        if (enabled) {
+            map.setProjection({ name: 'globe' });
+            
+            // Atmospheric Fog (Solar System feel)
+            map.setFog({
+                'range': [0.5, 10],
+                'color': '#010b1a', // Space dark blue
+                'high-color': '#245cdf', // Atmosphere blue
+                'space-color': '#000000',
+                'horizon-blend': 0.1,
+                'star-intensity': 0.5 // If supported by the version
+            });
+
+            document.getElementById('map').classList.add('globe-space');
+            map.setMinZoom(0);
+            map.setRenderWorldCopies(true); // Ensure 360 degree wrap
+            showToast("Interstellar mode activated. Orbiting MapNepal.");
+        } else {
+            map.setProjection({ name: 'mercator' });
+            map.setFog(null);
+            document.getElementById('map').classList.remove('globe-space');
+            map.setMinZoom(0);
+            showToast("Atmospheric reentry complete. Welcome home.");
+        }
     }
+
+
 
     function toggleLabels(enabled) {
         map.getStyle().layers.forEach(l => {
