@@ -880,8 +880,10 @@
         document.getElementById('elevationUI').style.display = 'none';
         if (map.getLayer('route-highlight')) map.removeLayer('route-highlight');
     }
-
+    /* ── Intelligence: Wikipedia Integration ────────────────── */
+    async function fetchIntelligence(query) {
         const wikiCard = document.getElementById('wikiCard');
+
         const wikiText = document.getElementById('wikiText');
         wikiCard.style.display = 'block';
         wikiText.textContent = 'Decrypting site data...';
