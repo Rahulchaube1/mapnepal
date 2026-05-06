@@ -1,5 +1,5 @@
 /**
- * EverestMap — Express API Server
+ * MapNepal — Express API Server
  *
  * Endpoints:
  *  GET  /api/provinces          - Nepal province GeoJSON
@@ -108,7 +108,7 @@ app.get('/api/search', async (req, res) => {
 
     try {
         const upstream = await fetch(nominatimUrl, {
-            headers: { 'User-Agent': 'EverestMap/1.0 (https://github.com/Rahulchaube1/mapnepal)' }
+            headers: { 'User-Agent': 'MapNepal/1.0 (https://github.com/Rahulchaube1/mapnepal)' }
         });
         if (!upstream.ok) throw new Error(`Nominatim responded ${upstream.status}`);
         const data = await upstream.json();
@@ -141,7 +141,7 @@ app.get('/api/reverse', async (req, res) => {
 
     try {
         const upstream = await fetch(url, {
-            headers: { 'User-Agent': 'EverestMap/1.0 (https://github.com/Rahulchaube1/mapnepal)' }
+            headers: { 'User-Agent': 'MapNepal/1.0 (https://github.com/Rahulchaube1/mapnepal)' }
         });
         if (!upstream.ok) throw new Error(`Nominatim responded ${upstream.status}`);
         const data = await upstream.json();
@@ -189,7 +189,7 @@ app.get('/api/route', async (req, res) => {
 
     try {
         const upstream = await fetch(osrmUrl, {
-            headers: { 'User-Agent': 'EverestMap/1.0' }
+            headers: { 'User-Agent': 'MapNepal/1.0' }
         });
         if (!upstream.ok) throw new Error(`OSRM responded ${upstream.status}`);
         const data = await upstream.json();
@@ -222,10 +222,10 @@ app.get('/api/route', async (req, res) => {
 app.get('/health', (_req, res) => {
     res.json({
         status: 'ok',
-        service: 'EverestMap API',
+        service: 'MapNepal API',
         version: '1.2.0',
         license: 'MIT',
-        copyright: '© 2025 EverestMap Project. All rights reserved.',
+        copyright: '© 2025 MapNepal Project. All rights reserved.',
         timestamp: new Date().toISOString()
     });
 });
@@ -237,7 +237,7 @@ app.get('*', (_req, res) => {
 
 /* ── Start ───────────────────────────────────────────────────── */
 app.listen(PORT, () => {
-    console.log(`\n🗺️  EverestMap API running at http://localhost:${PORT}`);
+    console.log(`\n🗺️  MapNepal API running at http://localhost:${PORT}`);
     console.log(`   Frontend:  http://localhost:${PORT}/`);
     console.log(`   Provinces: http://localhost:${PORT}/api/provinces`);
     console.log(`   Search:    http://localhost:${PORT}/api/search?q=Kathmandu`);

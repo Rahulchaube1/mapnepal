@@ -1,7 +1,7 @@
 {
-  "name": "everestmap-backend",
+  "name": "mapnepal-backend",
   "version": "1.0.0",
-  "description": "EverestMap API server — Nepal mapping platform backend",
+  "description": "MapNepal API server — Nepal mapping platform backend",
   "main": "server.js",
   "type": "module",
   "scripts": {

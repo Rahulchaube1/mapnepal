@@ -1,6 +1,6 @@
-# 🏔️ EverestMap — Nepal's Premier Mapping Platform
+# 🏔️ MapNepal — Nepal's Premier Mapping Platform
 
-EverestMap is a high-fidelity, open-source intelligence and mapping platform designed for exploring the diverse geography of Nepal. Built with a premium **Vision Pro** inspired aesthetic, it combines advanced mapping technology with a functional Express API backend to provide a seamless, state-of-the-art experience.
+MapNepal is a high-fidelity, open-source intelligence and mapping platform designed for exploring the diverse geography of Nepal. Built with a premium **Vision Pro** inspired aesthetic, it combines advanced mapping technology with a functional Express API backend to provide a seamless, state-of-the-art experience.
 
 ---
 
@@ -25,7 +25,7 @@ EverestMap is a high-fidelity, open-source intelligence and mapping platform des
 
 ```
 ┌─────────────────────────────┐      ┌──────────────────────────────┐
-│         Browser             │      │      EverestMap Backend       │
+│         Browser             │      │      MapNepal Backend       │
 │                             │      │        (Node.js / Express)    │
 │  ┌───────────────────────┐  │ HTTP │  ┌──────────────────────────┐ │
 │  │  frontend/index.html  │◄─┼──────┼──│  GET /api/provinces      │ │
@@ -74,10 +74,10 @@ Open `frontend/index.html` directly in any modern browser or serve it with any s
 
 ```bash
 # Using Node.js
-npx serve everestmap/frontend
+npx serve nepalmap/frontend
 
 # Or using Python
-python -m http.server -d everestmap/frontend 8080
+python -m http.server -d nepalmap/frontend 8080
 ```
 
 Then navigate to **http://localhost:8080**.
@@ -90,7 +90,7 @@ Then navigate to **http://localhost:8080**.
 
 ```bash
 # 1. Install backend dependencies
-cd everestmap/backend
+cd nepalmap/backend
 npm install
 
 # 2. Start the server
@@ -156,7 +156,7 @@ Server health check.
 ## 🗂️ Project Structure
 
 ```
-everestmap/
+nepalmap/
 ├── README.md                   # This file
 │
 ├── frontend/
@@ -209,7 +209,7 @@ everestmap/
 - [ ] **User authentication** — save favourite places and custom routes
 - [ ] **Offline PWA** — service worker for tile caching
 - [ ] **Voice navigation** — Web Speech API integration
-- [ ] **AI assistant (EverestQ)** — natural language map queries
+- [ ] **AI assistant (NepalQ)** — natural language map queries
 - [ ] **Disaster alert layer** — earthquake / flood overlays (USGS / BIPAD portal)
 - [ ] **Satellite imagery toggle** — via TiTiler or Sentinel Hub
 - [ ] **Real-time location sharing**
@@ -221,10 +221,10 @@ everestmap/
 
 ## 📜 License
 
-Code & Design: © 2025 EverestMap Project. Licensed under the **MIT License**.  
+Code & Design: © 2025 MapNepal Project. Licensed under the **MIT License**.  
 Data: © [OpenStreetMap contributors](https://www.openstreetmap.org/copyright) (ODbL)  
-License File: [LICENSE](file:///c:/Users/rahul/OneDrive/Desktop/aftermap/everestmap/LICENSE)  
-Copyright Notice: [COPYRIGHT](file:///c:/Users/rahul/OneDrive/Desktop/aftermap/everestmap/COPYRIGHT)
+License File: [LICENSE](file:///c:/Users/rahul/OneDrive/Desktop/aftermap/nepalmap/LICENSE)  
+Copyright Notice: [COPYRIGHT](file:///c:/Users/rahul/OneDrive/Desktop/aftermap/nepalmap/COPYRIGHT)
 ---
 
 ## 🙏 Credits
