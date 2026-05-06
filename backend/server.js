@@ -104,7 +104,8 @@ app.get('/api/search', async (req, res) => {
     const nominatimUrl =
         `https://nominatim.openstreetmap.org/search` +
         `?q=${encodeURIComponent(query)}` +
-        `&format=geojson&limit=${limit}&addressdetails=1`;
+        `&format=geojson&limit=${limit}&addressdetails=1&namedetails=1`;
+
 
     try {
         const upstream = await fetch(nominatimUrl, {
