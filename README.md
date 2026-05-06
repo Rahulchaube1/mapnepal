@@ -1,56 +1,23 @@
-<p align="center">
-  <span style="font-size:64px">🗺️</span>
-</p>
+# 🏔️ MapNepal — Nepal's Premier Mapping Platform
 
-<h1 align="center">EverestMap</h1>
-<p align="center"><strong>Nepal's modern, open-source mapping platform</strong></p>
-<p align="center">Built on MapLibre GL JS and OpenStreetMap data</p>
-
-<p align="center">
-  <img alt="Nepal Provinces Map" src="https://github.com/user-attachments/assets/dfe179f5-2ffe-4e7d-8e6f-f518e77c6e97" width="600">
-</p>
-
-<p align="center">
-  <a href="LICENSE.txt"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat" alt="License"></a>
-  <img src="https://img.shields.io/badge/EverestMap-Nepal%20Mapping-4299e1?style=flat" alt="EverestMap">
-  <img src="https://img.shields.io/badge/Nepal-7%20Provinces-red?style=flat" alt="Nepal Provinces">
-  <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat" alt="PRs welcome">
-</p>
-
-> A next-generation open-source map of Nepal with province boundaries, trekking routes, smart search, and 3D terrain.
+MapNepal is a high-fidelity, open-source intelligence and mapping platform designed for exploring the diverse geography of Nepal. Built with a premium **Vision Pro** inspired aesthetic, it combines advanced mapping technology with a functional Express API backend to provide a seamless, state-of-the-art experience.
 
 ---
 
-## 📸 Features
+## 📸 Premium Features
 
 | Feature | Description |
 |---------|-------------|
-| 🏔️ **Nepal Provinces** | All 7 provinces rendered with blue choropleth fills, borders, bilingual labels (English + नेपाली), and hover / click info panels |
-| 🥾 **Trekking Routes** | EBC, Annapurna Circuit, Langtang Valley, Manaslu Circuit — colour-coded with distance & altitude metadata |
-| 📍 **Landmarks** | 15+ key cities, peaks, temples, lakes with icon overlays and popup descriptions |
-| 🔍 **Smart Search** | Full-text search powered by Nominatim / OpenStreetMap; results fly-to on selection |
-| 🌓 **Dark / Light Theme** | Instant theme switching — CartoDB Dark Matter (dark) / OpenFreeMap Bright (light) |
-| 🗂️ **Layer Toggles** | Toggle provinces, trekking routes, and landmarks independently |
-| ⛰️ **3D Terrain** | One-click 3D elevation exaggeration via Mapterhorn DEM tiles |
-| 📐 **Navigation Controls** | Zoom, compass, pitch, full-screen, geolocation |
-| 📱 **Responsive UI** | Collapsible sidebar; works on desktop and mobile |
-| 🔌 **REST API Backend** | Node.js/Express server with geocoding, routing, and data endpoints |
-
----
-
-## 🗺️ Nepal Province Map
-
-EverestMap displays all 7 provinces of Nepal with a blue choropleth style, clearly showing provincial and district boundaries:
-
-| # | Province | Capital | Population | Area (km²) | Districts |
-|---|----------|---------|------------|------------|-----------|
-| 1 | Koshi कोशी | Biratnagar | 4.53M | 25,905 | 14 |
-| 2 | Madhesh मधेश | Janakpur | 6.13M | 9,661 | 8 |
-| 3 | Bagmati बागमती | Hetauda | 6.08M | 20,300 | 13 |
-| 4 | Gandaki गण्डकी | Pokhara | 2.40M | 21,504 | 11 |
-| 5 | Lumbini लुम्बिनी | Butwal | 5.12M | 22,288 | 12 |
-| 6 | Karnali कर्णाली | Surkhet | 1.69M | 27,984 | 10 |
-| 7 | Sudurpashchim सुदूरपश्चिम | Dhangadhi | 2.55M | 19,539 | 9 |
+| 💎 **Premium UI** | High-fidelity **Glassmorphism** design with modern typography (Outfit & Inter) |
+| 🏔️ **Nepal Provinces** | All 7 provinces rendered with distinct colour-coded fills, borders, and dynamic info panels |
+| 🥾 **Trekking Routes** | EBC, Annapurna Circuit, Langtang Valley, Manaslu Circuit — fully integrated via API |
+| 📍 **Landmarks** | Cities, peaks, temples, and natural wonders with icon overlays and detailed popups |
+| 🔍 **Proxy Search** | Full-text search routed through our internal proxy for high reliability and speed |
+| 🌗 **Vision Pro Dark Mode** | Sophisticated dark theme with electric cyan accents and HSL tailored palettes |
+| 🗂️ **Smart Layering** | Dynamic toggles for Political Boundaries, Trekking Routes, and Landmarks |
+| ⛰️ **High-Fidelity 3D** | Immersive 3D terrain exploration powered by raster-dem tiles |
+| 📱 **Adaptive Layout** | Fully responsive design that feels premium on both mobile and desktop |
+| 🔌 **Functional API** | Robust Node.js/Express backend serving geocoding, routing, and GeoJSON endpoints |
 
 ---
 
@@ -58,7 +25,7 @@ EverestMap displays all 7 provinces of Nepal with a blue choropleth style, clear
 
 ```
 ┌─────────────────────────────┐      ┌──────────────────────────────┐
-│         Browser             │      │      EverestMap Backend       │
+│         Browser             │      │      MapNepal Backend       │
 │                             │      │        (Node.js / Express)    │
 │  ┌───────────────────────┐  │ HTTP │  ┌──────────────────────────┐ │
 │  │  frontend/index.html  │◄─┼──────┼──│  GET /api/provinces      │ │
@@ -103,14 +70,14 @@ EverestMap displays all 7 provinces of Nepal with a blue choropleth style, clear
 
 ### Option A — Frontend only (no server needed)
 
-Open `everestmap/frontend/index.html` directly in any modern browser or serve it with any static file server:
+Open `frontend/index.html` directly in any modern browser or serve it with any static file server:
 
 ```bash
 # Using Node.js
-npx serve everestmap/frontend
+npx serve nepalmap/frontend
 
 # Or using Python
-python -m http.server -d everestmap/frontend 8080
+python -m http.server -d nepalmap/frontend 8080
 ```
 
 Then navigate to **http://localhost:8080**.
@@ -123,7 +90,7 @@ Then navigate to **http://localhost:8080**.
 
 ```bash
 # 1. Install backend dependencies
-cd everestmap/backend
+cd nepalmap/backend
 npm install
 
 # 2. Start the server
@@ -189,8 +156,8 @@ Server health check.
 ## 🗂️ Project Structure
 
 ```
-everestmap/
-├── README.md                   # EverestMap documentation
+nepalmap/
+├── README.md                   # This file
 │
 ├── frontend/
 │   └── index.html              # Complete single-page application
@@ -211,6 +178,20 @@ everestmap/
 
 ---
 
+## 🇳🇵 Nepal Province Data
+
+| # | Province | Capital | Population | Area (km²) | Districts |
+|---|----------|---------|------------|------------|-----------|
+| 1 | Koshi कोशी | Biratnagar | 4.53M | 25,905 | 14 |
+| 2 | Madhesh मधेश | Janakpur | 6.13M | 9,661 | 8 |
+| 3 | Bagmati बागमती | Hetauda | 6.08M | 20,300 | 13 |
+| 4 | Gandaki गण्डकी | Pokhara | 2.40M | 21,504 | 11 |
+| 5 | Lumbini लुम्बिनी | Butwal | 5.12M | 22,288 | 12 |
+| 6 | Karnali कर्णाली | Surkhet | 1.69M | 27,984 | 10 |
+| 7 | Sudurpashchim सुदूरपश्चिम | Dhangadhi | 2.55M | 19,539 | 9 |
+
+---
+
 ## 🥾 Trekking Routes
 
 | Trek | Distance | Duration | Max Altitude |
@@ -228,7 +209,7 @@ everestmap/
 - [ ] **User authentication** — save favourite places and custom routes
 - [ ] **Offline PWA** — service worker for tile caching
 - [ ] **Voice navigation** — Web Speech API integration
-- [ ] **AI assistant (EverestQ)** — natural language map queries
+- [ ] **AI assistant (NepalQ)** — natural language map queries
 - [ ] **Disaster alert layer** — earthquake / flood overlays (USGS / BIPAD portal)
 - [ ] **Satellite imagery toggle** — via TiTiler or Sentinel Hub
 - [ ] **Real-time location sharing**
@@ -240,9 +221,10 @@ everestmap/
 
 ## 📜 License
 
+Code & Design: © 2025 MapNepal Project. Licensed under the **MIT License**.  
 Data: © [OpenStreetMap contributors](https://www.openstreetmap.org/copyright) (ODbL)  
-Code: MIT — see [LICENSE.txt](LICENSE.txt)
-
+License File: [LICENSE](LICENSE)  
+Copyright Notice: [COPYRIGHT](COPYRIGHT)
 ---
 
 ## 🙏 Credits
