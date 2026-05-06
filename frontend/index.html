@@ -125,6 +125,103 @@
         .res-name { font-size: 15px; font-weight: 500; margin-bottom: 2px; }
         .res-addr { font-size: 13px; color: var(--gm-muted); }
 
+        /* ── Autocomplete ────────────────────────── */
+        #autocomplete-results {
+            position: absolute; top: 62px; left: 12px;
+            width: 392px; background: white;
+            border-radius: 8px; box-shadow: var(--gm-shadow);
+            z-index: 1001; display: none; overflow: hidden;
+        }
+        .ac-item { padding: 12px 16px; cursor: pointer; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #f1f3f4; }
+        .ac-item:hover { background: #f8f9fa; }
+        .ac-icon { color: var(--gm-muted); font-size: 14px; }
+        .ac-text { flex: 1; font-size: 14px; }
+
+        /* ── Category Chips ──────────────────────── */
+        .category-container {
+            position: absolute; top: 72px; left: 12px;
+            display: flex; gap: 8px; z-index: 999;
+            padding: 4px 0; max-width: 392px; overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .category-container::-webkit-scrollbar { display: none; }
+        .chip {
+            background: white; border: 1px solid var(--gm-border);
+            padding: 6px 12px; border-radius: 16px; font-size: 13px;
+            white-space: nowrap; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            display: flex; align-items: center; gap: 6px;
+        }
+        .chip:hover { background: #f1f3f4; }
+
+        /* ── Measurement Tool ────────────────────── */
+        .measure-info {
+            position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.8); color: white; padding: 8px 16px;
+            border-radius: 20px; font-size: 14px; z-index: 1000; display: none;
+        }
+
+        /* ── Context Menu ────────────────────────── */
+        #context-menu {
+            position: absolute; background: white; border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2); z-index: 2000;
+            display: none; width: 180px; padding: 8px 0;
+        }
+        .cm-item { padding: 8px 16px; cursor: pointer; font-size: 13px; }
+        .cm-item:hover { background: #f1f3f4; }
+        .cm-sep { height: 1px; background: #eee; margin: 4px 0; }
+
+        /* ── Dark Mode ───────────────────────────── */
+        body.dark-mode { --gm-bg: #202124; --gm-text: #e8eaed; --gm-border: #3c4043; --gm-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        /* ── Search in Area ──────────────────────── */
+        #search-area-btn {
+            position: absolute; top: 120px; left: 50%; transform: translateX(-50%);
+            background: white; border: none; padding: 10px 20px; border-radius: 20px;
+            box-shadow: var(--gm-shadow); cursor: pointer; display: none;
+            z-index: 1000; font-size: 14px; font-weight: 500; color: var(--gm-blue);
+            transition: 0.2s;
+        }
+        #search-area-btn:hover { background: #f1f3f4; }
+
+        /* ── Elevation Chart ─────────────────────── */
+        .elevation-container {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 200px;
+            background: white; border-top: 1px solid var(--gm-border);
+            z-index: 1200; display: none; padding: 20px;
+        }
+        .elev-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .elev-chart { width: 100%; height: 120px; background: #f8f9fa; border-radius: 4px; display: flex; align-items: flex-end; gap: 2px; padding: 10px; }
+        .elev-bar { flex: 1; background: #dadce0; min-height: 2px; transition: 0.3s; position: relative; }
+        .elev-bar:hover { background: var(--gm-blue); }
+        .elev-bar:hover::after {
+            content: attr(data-val) 'm'; position: absolute; top: -25px; left: 50%;
+            transform: translateX(-50%); background: #333; color: white;
+            padding: 2px 6px; border-radius: 4px; font-size: 10px; white-space: nowrap;
+        }
+
+        /* ── Recent Searches ─────────────────────── */
+        #recent-searches {
+            padding: 8px 0; border-top: 1px solid #f1f3f4;
+        }
+        .recent-title { padding: 8px 16px; font-size: 11px; font-weight: 700; color: var(--gm-muted); text-transform: uppercase; }
+        .recent-item { padding: 8px 16px; cursor: pointer; display: flex; align-items: center; gap: 12px; }
+        .recent-item:hover { background: #f8f9fa; }
+
+        /* ── Dark Mode Tweaks ────────────────────── */
+        .dark-mode .elevation-container { background: #202124; color: #e8eaed; }
+        .dark-mode .elev-chart { background: #303134; }
+        .dark-mode .elev-bar { background: #5f6368; }
+
+        /* ── Legend ─────────────────────────────── */
+        #legend-btn { position: absolute; bottom: 32px; right: 60px; width: 40px; height: 40px; background: white; border-radius: 4px; box-shadow: var(--gm-shadow); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1000; font-size: 18px; }
+        #legend-panel { position: absolute; bottom: 80px; right: 60px; width: 200px; background: white; border-radius: 8px; box-shadow: var(--gm-shadow); z-index: 1000; display: none; padding: 16px; }
+        .legend-item { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; font-size: 13px; }
+        .legend-color { width: 16px; height: 16px; border-radius: 2px; }
+
+        .dark-mode #legend-panel { background: #202124; color: #e8eaed; }
+
+
+
+
     </style>
 </head>
 <body>
@@ -142,6 +239,22 @@
             <div class="sb-btn" onclick="openDirections()" style="color:var(--gm-blue);">↗️</div>
         </div>
     </div>
+
+    <!-- Autocomplete Results -->
+    <div id="autocomplete-results"></div>
+
+    <!-- Category Chips -->
+    <div class="category-container">
+        <div class="chip" onclick="searchNearby('restaurant')">🍴 Restaurants</div>
+        <div class="chip" onclick="searchNearby('hotel')">🏨 Hotels</div>
+        <div class="chip" onclick="loadTrekkingRoutes()">🏔️ Trekking</div>
+        <div class="chip" onclick="searchNearby('temple')">🛕 Temples</div>
+        <div class="chip" onclick="searchNearby('atm')">🏦 ATMs</div>
+    </div>
+
+    <button id="search-area-btn" onclick="triggerSearch(true)">Search in this area</button>
+
+
 
     <!-- Weather Widget -->
     <div class="weather-widget">
@@ -186,9 +299,10 @@
                         </div>
                         <div class="action-item" onclick="sharePlace()">
                             <div class="action-circle">📱</div>
-                            <div class="action-label">Send</div>
+                            <div class="action-label">Share</div>
                         </div>
                     </div>
+
 
                     <!-- Site Intelligence (Wikipedia) -->
                     <div class="wiki-card" id="wikiCard" style="display:none;">
@@ -214,11 +328,14 @@
             <div class="dir-row">
                 <div class="dir-dot"></div>
                 <input type="text" class="dir-input" id="dirFrom" placeholder="Starting point...">
+                <div onclick="useMyLocation('from')" style="cursor:pointer; font-size:12px; margin-left:-30px; color:white; z-index:1;">📍</div>
             </div>
             <div class="dir-row">
                 <div class="dir-dot" style="background:white;"></div>
                 <input type="text" class="dir-input" id="dirTo" placeholder="Destination...">
+                <div onclick="useMyLocation('to')" style="cursor:pointer; font-size:12px; margin-left:-30px; color:white; z-index:1;">📍</div>
             </div>
+
             <div class="mode-selector">
                 <div class="mode-btn active" onclick="setTravelMode('driving')">🚗 Drive</div>
                 <div class="mode-btn" onclick="setTravelMode('walking')">🚶 Walk</div>
@@ -234,7 +351,8 @@
     </div>
 
     <!-- Advanced Controls -->
-    <div class="controls">
+        <div class="btn-ctrl" onclick="toggleDarkMode()" title="Dark Mode">🌓</div>
+        <div class="btn-ctrl" onclick="toggleMeasureTool()" id="btnMeasure" title="Measure distance">📏</div>
         <div class="btn-ctrl" onclick="geolocate()" title="Locate Me">🛰️</div>
         <div class="btn-ctrl" onclick="toggle3DMode()" id="btn3D">3D</div>
         <div style="margin-top:8px; border-radius:4px; overflow:hidden; box-shadow:var(--gm-shadow);">
@@ -244,10 +362,63 @@
         <div class="btn-ctrl" style="margin-top:8px; font-size:12px; font-weight:bold;" onclick="toggleLanguage()">ने</div>
     </div>
 
+    <div id="context-menu">
+        <div class="cm-item" onclick="directionsToHere()">Directions to here</div>
+        <div class="cm-item" onclick="directionsFromHere()">Directions from here</div>
+        <div class="cm-sep"></div>
+        <div class="cm-item" onclick="copyCoords()">Copy coordinates</div>
+    </div>
+
+    <div class="measure-info" id="measureInfo">Total distance: 0 km</div>
+
+    <!-- Elevation Profile -->
+    <div class="elevation-container" id="elevationUI">
+        <div class="elev-header">
+            <div style="font-weight:500;" id="elevTitle">Elevation Profile</div>
+            <div style="cursor:pointer; font-size:18px;" onclick="closeElevation()">✕</div>
+        </div>
+        <div class="elev-chart" id="elevChart"></div>
+        <div style="margin-top:10px; font-size:12px; color:var(--gm-muted); display:flex; justify-content:space-between;">
+            <span id="elevStart">Start</span>
+            <span id="elevMax">Max: 0m</span>
+            <span id="elevEnd">End</span>
+        </div>
+    </div>
+
+
+
     <div class="coord-jump" onclick="jumpToCoords()">Jump to: 27.7, 85.3</div>
     <div class="layer-picker" onclick="toggleLayerMenu()" id="layerThumb"></div>
-    <div id="toast">Intelligence synchronized</div>
-</div>
+
+    <div class="layer-picker-menu" id="layer-menu">
+        <div style="font-weight:500; margin-bottom:12px;">Map Type</div>
+        <div class="layer-grid">
+            <div class="layer-option" onclick="setLayer('streets')">
+                <div class="layer-thumb" style="background-image:url('https://tiles.openfreemap.org/styles/bright')"></div>
+                <div class="layer-name">Default</div>
+            </div>
+            <div class="layer-option" onclick="setLayer('satellite')">
+                <div class="layer-thumb" style="background-image:url('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/12/2522/1553')"></div>
+                <div class="layer-name">Satellite</div>
+            </div>
+            <div class="layer-option" onclick="showToast('Terrain coming soon')">
+                <div class="layer-thumb" style="background-image:url('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/12/2522/1553'); filter:grayscale(1);"></div>
+                <div class="layer-name">Terrain</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="legend-btn" onclick="toggleLegend()" title="Map Legend">🗺️</div>
+    <div id="legend-panel">
+        <div style="font-weight:700; margin-bottom:12px; border-bottom:1px solid #eee; padding-bottom:8px;">Legend</div>
+        <div class="legend-item"><div class="legend-color" style="background:#e74c3c;"></div><span>EBC Trek</span></div>
+        <div class="legend-item"><div class="legend-color" style="background:#3498db;"></div><span>Annapurna</span></div>
+        <div class="legend-item"><div class="legend-color" style="background:#27ae60;"></div><span>Langtang</span></div>
+        <div class="legend-item"><div class="legend-color" style="background:#f39c12;"></div><span>Manaslu</span></div>
+        <div class="legend-item"><span style="font-size:16px;">🛕</span><span>Temple / Site</span></div>
+        <div class="legend-item"><span style="font-size:16px;">🏔️</span><span>Mountain Peak</span></div>
+    </div>
+
 
 <script src="https://unpkg.com/maplibre-gl@5.0.0/dist/maplibre-gl.js"></script>
 
@@ -267,6 +438,13 @@
     let currentPlace = null;
     let travelMode = 'driving';
     let isNepali = false;
+    let isMeasuring = false;
+    let measurePoints = [];
+    let measureMarkers = [];
+    let currentMarker = null;
+    let contextLngLat = null;
+    let searchTimeout = null;
+
 
     function init() {
         map = new maplibregl.Map({
@@ -278,14 +456,431 @@
             antialias: true
         });
 
+        map.addControl(new maplibregl.NavigationControl(), 'bottom-right');
+        map.addControl(new maplibregl.ScaleControl({ maxWidth: 100, unit: 'metric' }), 'bottom-left');
+
         map.on('load', () => {
             setupSearch();
+            setupAutocomplete();
+            setupMapClicks();
+            setupSearchInArea();
             updateWeather();
+            loadFavorites();
         });
     }
 
-    /* ── Intelligence: Wikipedia Integration ────────────────── */
-    async function fetchIntelligence(query) {
+    /* ── Search Persistence & History ────────────────────────── */
+    function saveSearch(q) {
+        let history = JSON.parse(localStorage.getItem('mapnepal_history') || '[]');
+        history = history.filter(h => h !== q);
+        history.unshift(q);
+        localStorage.setItem('mapnepal_history', JSON.stringify(history.slice(0, 5)));
+    }
+
+    function showRecentSearches() {
+        const history = JSON.parse(localStorage.getItem('mapnepal_history') || '[]');
+        if (history.length === 0) return;
+        
+        const results = document.getElementById('autocomplete-results');
+        results.innerHTML = `
+            <div id="recent-searches">
+                <div class="recent-title">Recent Searches</div>
+                ${history.map(h => `
+                    <div class="recent-item" onclick="triggerSearchWith('${h}')">
+                        <span class="ac-icon">🕒</span>
+                        <span class="ac-text">${h}</span>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+        results.style.display = 'block';
+    }
+
+    function triggerSearchWith(q) {
+        document.getElementById('searchInput').value = q;
+        triggerSearch();
+    }
+
+    /* ── Advanced Search Tools ───────────────────────────────── */
+    function setupSearchInArea() {
+        map.on('moveend', () => {
+            if (document.getElementById('sidebar').classList.contains('open')) {
+                document.getElementById('search-area-btn').style.display = 'block';
+            }
+        });
+    }
+
+    function sharePlace() {
+        const center = map.getCenter();
+        const zoom = map.getZoom();
+        const url = `${window.location.origin}${window.location.pathname}?l=${center.lng.toFixed(5)},${center.lat.toFixed(5)}&z=${zoom.toFixed(1)}`;
+        
+        if (currentPlace) {
+            const name = currentPlace.properties.display_name.split(',')[0];
+            navigator.clipboard.writeText(`Check out ${name} on MapNepal: ${url}`).then(() => showToast("Share link copied!"));
+        } else {
+            navigator.clipboard.writeText(`Check out this location on MapNepal: ${url}`).then(() => showToast("Link copied!"));
+        }
+    }
+
+
+
+    /* ── Autocomplete ────────────────────────────────────────── */
+    function setupAutocomplete() {
+        const input = document.getElementById('searchInput');
+        const results = document.getElementById('autocomplete-results');
+
+        input.addEventListener('input', () => {
+            clearTimeout(searchTimeout);
+            const q = input.value.trim();
+            if (q.length < 3) {
+                results.style.display = 'none';
+                return;
+            }
+
+            searchTimeout = setTimeout(async () => {
+                try {
+                    const res = await fetch(`/api/search?q=${encodeURIComponent(q)}&limit=5`);
+                    const data = await res.json();
+                    
+                    if (data.features && data.features.length > 0) {
+                        results.innerHTML = data.features.map(f => `
+                            <div class="ac-item" onclick="selectAutocomplete(${JSON.stringify(f).replace(/"/g, '&quot;')})">
+                                <span class="ac-icon">📍</span>
+                                <span class="ac-text">${f.properties.display_name}</span>
+                            </div>
+                        `).join('');
+                        results.style.display = 'block';
+                    } else {
+                        results.style.display = 'none';
+                    }
+                } catch (e) {
+                    console.error('Autocomplete error', e);
+                }
+            }, 300);
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!input.contains(e.target) && !results.contains(e.target)) {
+                results.style.display = 'none';
+            }
+        });
+    }
+
+    function selectAutocomplete(f) {
+        document.getElementById('searchInput').value = f.properties.display_name.split(',')[0];
+        document.getElementById('autocomplete-results').style.display = 'none';
+        openDetail(f);
+    }
+
+    /* ── Map Interactions & Reverse Geocoding ─────────────────── */
+    function setupMapClicks() {
+        map.on('click', async (e) => {
+            if (isMeasuring) {
+                addMeasurePoint(e.lngLat);
+                return;
+            }
+
+            const { lng, lat } = e.lngLat;
+            
+            // Show marker
+            if (currentMarker) currentMarker.remove();
+            currentMarker = new maplibregl.Marker({ color: '#1a73e8' })
+                .setLngLat([lng, lat])
+                .addTo(map);
+
+            try {
+                const res = await fetch(`/api/reverse?lat=${lat}&lng=${lng}`);
+                const data = await res.json();
+                
+                if (data.display_name) {
+                    openDetail({
+                        type: 'Feature',
+                        geometry: { type: 'Point', coordinates: [lng, lat] },
+                        properties: { display_name: data.display_name }
+                    });
+                }
+            } catch (err) {
+                showToast("Node intelligence unavailable.");
+            }
+        });
+
+        map.on('contextmenu', (e) => {
+            e.preventDefault();
+            contextLngLat = e.lngLat;
+            const menu = document.getElementById('context-menu');
+            menu.style.top = `${e.point.y}px`;
+            menu.style.left = `${e.point.x}px`;
+            menu.style.display = 'block';
+        });
+
+        document.addEventListener('click', () => {
+            document.getElementById('context-menu').style.display = 'none';
+        });
+    }
+
+    function directionsToHere() {
+        document.getElementById('dirTo').value = `${contextLngLat.lng.toFixed(5)}, ${contextLngLat.lat.toFixed(5)}`;
+        openDirections();
+    }
+
+    function directionsFromHere() {
+        document.getElementById('dirFrom').value = `${contextLngLat.lng.toFixed(5)}, ${contextLngLat.lat.toFixed(5)}`;
+        openDirections();
+    }
+
+    function copyCoords() {
+        const txt = `${contextLngLat.lat.toFixed(6)}, ${contextLngLat.lng.toFixed(6)}`;
+        navigator.clipboard.writeText(txt).then(() => showToast("Coordinates copied: " + txt));
+    }
+
+    /* ── Nearby Discovery ────────────────────────────────────── */
+    async function searchNearby(category) {
+        const center = map.getCenter();
+        const q = `${category} near ${center.lng.toFixed(3)}, ${center.lat.toFixed(3)}`;
+        document.getElementById('searchInput').value = category.replace('_', ' ');
+        
+        showToast(`Scanning for nearby ${category}...`);
+        
+        // Use the existing search API but focus on the current view
+        const res = await fetch(`/api/search?q=${encodeURIComponent(category)}&limit=10`);
+        const data = await res.json();
+        
+        toggleSidebar(true);
+        const list = document.getElementById('resultsList');
+        document.getElementById('resultsView').style.display = 'block';
+        document.getElementById('detailView').style.display = 'none';
+
+        if (data.features && data.features.length > 0) {
+            list.innerHTML = data.features.map(f => `
+                <div class="result-item" onclick="openDetail(${JSON.stringify(f).replace(/"/g, '&quot;')})">
+                    <div class="res-name">${f.properties.display_name.split(',')[0]}</div>
+                    <div class="res-addr">${f.properties.display_name}</div>
+                </div>
+            `).join('');
+            
+            // Fit map to results
+            const bounds = new maplibregl.LngLatBounds();
+            data.features.forEach(f => bounds.extend(f.geometry.coordinates));
+            map.fitBounds(bounds, { padding: 50 });
+        } else {
+            list.innerHTML = '<div style="padding:20px;">No matches found in this sector.</div>';
+        }
+    }
+
+    /* ── Measurement Tool ────────────────────────────────────── */
+    function toggleMeasureTool() {
+        isMeasuring = !isMeasuring;
+        const btn = document.getElementById('btnMeasure');
+        const info = document.getElementById('measureInfo');
+        
+        if (isMeasuring) {
+            btn.style.color = 'var(--gm-blue)';
+            info.style.display = 'block';
+            info.textContent = 'Click map to start measuring';
+            measurePoints = [];
+            clearMeasure();
+        } else {
+            btn.style.color = '#666';
+            info.style.display = 'none';
+            clearMeasure();
+        }
+    }
+
+    function addMeasurePoint(lngLat) {
+        measurePoints.push([lngLat.lng, lngLat.lat]);
+        
+        const marker = new maplibregl.Marker({ element: createMeasureDot() })
+            .setLngLat(lngLat)
+            .addTo(map);
+        measureMarkers.push(marker);
+
+        updateMeasureLine();
+    }
+
+    function createMeasureDot() {
+        const el = document.createElement('div');
+        el.style.width = '12px'; el.style.height = '12px';
+        el.style.background = 'white'; el.style.border = '3px solid var(--gm-blue)';
+        el.style.borderRadius = '50%';
+        return el;
+    }
+
+    function updateMeasureLine() {
+        if (measurePoints.length < 2) return;
+
+        const geojson = {
+            type: 'Feature',
+            geometry: { type: 'LineString', coordinates: measurePoints }
+        };
+
+        if (map.getSource('measure')) {
+            map.getSource('measure').setData(geojson);
+        } else {
+            map.addSource('measure', { type: 'geojson', data: geojson });
+            map.addLayer({ id: 'measure-line', type: 'line', source: 'measure', paint: { 'line-color': 'var(--gm-blue)', 'line-width': 3, 'line-dasharray': [2, 1] } });
+        }
+
+        // Calculate distance
+        let dist = 0;
+        for (let i = 0; i < measurePoints.length - 1; i++) {
+            dist += getDistance(measurePoints[i], measurePoints[i+1]);
+        }
+        document.getElementById('measureInfo').textContent = `Total distance: ${dist.toFixed(2)} km`;
+    }
+
+    function getDistance(p1, p2) {
+        const R = 6371; // km
+        const dLat = (p2[1] - p1[1]) * Math.PI / 180;
+        const dLon = (p2[0] - p1[0]) * Math.PI / 180;
+        const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                  Math.cos(p1[1] * Math.PI / 180) * Math.cos(p2[1] * Math.PI / 180) *
+                  Math.sin(dLon/2) * Math.sin(dLon/2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return R * c;
+    }
+
+    function clearMeasure() {
+        measureMarkers.forEach(m => m.remove());
+        measureMarkers = [];
+        measurePoints = [];
+        if (map.getLayer('measure-line')) map.removeLayer('measure-line');
+        if (map.getSource('measure')) map.removeSource('measure');
+    }
+
+    /* ── Persistence: Favorites ──────────────────────────────── */
+    function savePlace() {
+        if (!currentPlace) return;
+        let favs = JSON.parse(localStorage.getItem('mapnepal_favs') || '[]');
+        const exists = favs.find(f => f.properties.display_name === currentPlace.properties.display_name);
+        
+        if (exists) {
+            favs = favs.filter(f => f.properties.display_name !== currentPlace.properties.display_name);
+            document.getElementById('saveIcon').textContent = '🔖';
+            document.getElementById('saveLabel').textContent = 'Save';
+            showToast("Removed from favorites");
+        } else {
+            favs.push(currentPlace);
+            document.getElementById('saveIcon').textContent = '⭐';
+            document.getElementById('saveLabel').textContent = 'Saved';
+            showToast("Added to favorites");
+        }
+        localStorage.setItem('mapnepal_favs', JSON.stringify(favs));
+    }
+
+    function loadFavorites() {
+        // Could show in sidebar later
+    }
+
+    /* ── Dark Mode & UI ──────────────────────────────────────── */
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+        const isDark = document.body.classList.contains('dark-mode');
+        showToast(isDark ? "Dark node activated" : "Light node activated");
+    }
+
+    function toggleLegend() {
+        const panel = document.getElementById('legend-panel');
+        panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+    }
+
+
+
+
+    /* ── Trekking & Elevation ────────────────────────────────── */
+    async function loadTrekkingRoutes() {
+        showToast("Loading Himalayan trekking nodes...");
+        try {
+            const res = await fetch('/api/trekking-routes');
+            const data = await res.json();
+            
+            if (map.getSource('trekking')) {
+                map.getSource('trekking').setData(data);
+            } else {
+                map.addSource('trekking', { type: 'geojson', data: data });
+                map.addLayer({
+                    id: 'trekking-layer',
+                    type: 'line',
+                    source: 'trekking',
+                    layout: { 'line-join': 'round', 'line-cap': 'round' },
+                    paint: { 'line-color': ['get', 'color'], 'line-width': 4 }
+                });
+
+                map.on('click', 'trekking-layer', (e) => {
+                    const f = e.features[0];
+                    showElevationProfile(f);
+                });
+
+                map.on('mouseenter', 'trekking-layer', () => { map.getCanvas().style.cursor = 'pointer'; });
+                map.on('mouseleave', 'trekking-layer', () => { map.getCanvas().style.cursor = ''; });
+            }
+
+            const bounds = new maplibregl.LngLatBounds();
+            data.features.forEach(f => f.geometry.coordinates.forEach(c => bounds.extend(c)));
+            map.fitBounds(bounds, { padding: 50 });
+            
+            toggleSidebar(true);
+            const list = document.getElementById('resultsList');
+            document.getElementById('resultsView').style.display = 'block';
+            document.getElementById('detailView').style.display = 'none';
+            list.innerHTML = `
+                <div style="padding:16px 24px; font-weight:500;">Active Himalayan Trails</div>
+                ${data.features.map(f => `
+                    <div class="result-item" onclick="showElevationProfile(${JSON.stringify(f).replace(/"/g, '&quot;')})">
+                        <div class="res-name">🏔️ ${f.properties.name}</div>
+                        <div class="res-addr">${f.properties.distance_km} km | ${f.properties.duration}</div>
+                    </div>
+                `).join('')}
+            `;
+        } catch (e) {
+            showToast("Failed to fetch trail data.");
+        }
+    }
+
+    function showElevationProfile(f) {
+        const ui = document.getElementById('elevationUI');
+        const chart = document.getElementById('elevChart');
+        const title = document.getElementById('elevTitle');
+        const props = f.properties;
+
+        ui.style.display = 'block';
+        title.textContent = `Elevation: ${props.name}`;
+        
+        // Mocking elevation data based on max_altitude
+        const max = props.max_altitude_m;
+        const start = 2000; // Mock base
+        const steps = 40;
+        let html = '';
+        
+        for (let i = 0; i < steps; i++) {
+            const progress = i / steps;
+            // Create a pseudo-random Himalayan slope
+            const val = start + (max - start) * Math.sin(progress * Math.PI) + (Math.random() * 200);
+            const height = (val / 6000) * 100; // scale to 100%
+            html += `<div class="elev-bar" style="height:${height}%" data-val="${Math.round(val)}"></div>`;
+        }
+        
+        chart.innerHTML = html;
+        document.getElementById('elevStart').textContent = props.start || 'Start';
+        document.getElementById('elevEnd').textContent = props.end || 'Base Camp';
+        document.getElementById('elevMax').textContent = `Max: ${max}m`;
+
+        // Highlight route on map
+        if (map.getLayer('route-highlight')) map.removeLayer('route-highlight');
+        map.addLayer({
+            id: 'route-highlight',
+            type: 'line',
+            source: 'trekking',
+            filter: ['==', 'id', props.id],
+            paint: { 'line-color': '#fff', 'line-width': 6, 'line-opacity': 0.5 }
+        }, 'trekking-layer');
+    }
+
+    function closeElevation() {
+        document.getElementById('elevationUI').style.display = 'none';
+        if (map.getLayer('route-highlight')) map.removeLayer('route-highlight');
+    }
+
         const wikiCard = document.getElementById('wikiCard');
         const wikiText = document.getElementById('wikiText');
         wikiCard.style.display = 'block';
@@ -315,19 +910,29 @@
     }
 
     async function calculateRoute() {
-        const from = document.getElementById('dirFrom').value;
-        const to = document.getElementById('dirTo').value;
-        if(!from || !to) return showToast("Enter endpoints");
+        const fromVal = document.getElementById('dirFrom').value;
+        const toVal = document.getElementById('dirTo').value;
+        if(!fromVal || !toVal) return showToast("Enter endpoints");
 
         showToast(`Optimizing ${travelMode} route...`);
         
-        // In a real app, we would geocode both. For demo, we use a calculated path via OSRM proxy
-        // Since we need coords, we'll mock the jump for the demo
-        const start = [85.32, 27.71];
-        const end = currentPlace ? currentPlace.geometry.coordinates : [85.42, 27.81];
+        let startCoords, endCoords;
+
+        // Parse coords or use defaults
+        try {
+            startCoords = fromVal.includes(',') ? fromVal.split(',').map(Number).reverse() : [85.32, 27.71];
+            endCoords = toVal.includes(',') ? toVal.split(',').map(Number).reverse() : (currentPlace ? currentPlace.geometry.coordinates : [85.42, 27.81]);
+            
+            // Note: OSRM expects [lng, lat]
+            if (fromVal.includes(',')) startCoords = fromVal.split(',').map(Number); // wait, OSRM proxy expects lng,lat
+            if (toVal.includes(',')) endCoords = toVal.split(',').map(Number);
+        } catch(e) {
+            startCoords = [85.32, 27.71];
+            endCoords = [85.42, 27.81];
+        }
 
         try {
-            const res = await fetch(`/api/route?from=${start.join(',')}&to=${end.join(',')}&mode=${travelMode}`);
+            const res = await fetch(`/api/route?from=${startCoords.join(',')}&to=${endCoords.join(',')}&mode=${travelMode}`);
             const data = await res.json();
             
             if (data.geometry) {
@@ -343,8 +948,8 @@
                 map.fitBounds(bounds, { padding: 80 });
 
                 document.getElementById('routeSteps').innerHTML = `
-                    <div style="font-weight:700; margin-bottom:12px; color:var(--gm-blue);">Route Intelligence: ${data.properties.duration}</div>
-                    <div style="font-size:14px;">Distance: ${data.properties.distance}<br>Efficiency: High</div>
+                    <div style="font-weight:700; margin-bottom:12px; color:var(--gm-blue);">Route Intelligence: ${data.properties.duration_min} min</div>
+                    <div style="font-size:14px;">Distance: ${data.properties.distance_km} km<br>Efficiency: High</div>
                 `;
             }
         } catch (e) {
@@ -352,17 +957,36 @@
         }
     }
 
+    function useMyLocation(field) {
+        navigator.geolocation.getCurrentPosition(p => {
+            const val = `${p.coords.longitude.toFixed(5)}, ${p.coords.latitude.toFixed(5)}`;
+            document.getElementById(field === 'from' ? 'dirFrom' : 'dirTo').value = val;
+            showToast("My location pinned");
+        }, () => showToast("Geolocation access denied"));
+    }
+
+
     /* ── Search & Discovery ──────────────────────────────────── */
-    async function triggerSearch() {
+    async function triggerSearch(inArea) {
         const q = document.getElementById('searchInput').value.trim();
         if(!q) return;
+        
+        if (!inArea) saveSearch(q);
+        document.getElementById('search-area-btn').style.display = 'none';
         
         toggleSidebar(true);
         const list = document.getElementById('resultsList');
         list.innerHTML = '<div style="padding:20px;">Scanning MapNepal nodes...</div>';
         
-        const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`);
+        let url = `/api/search?q=${encodeURIComponent(q)}`;
+        if (inArea) {
+            const b = map.getBounds();
+            // Could add viewbox to Nominatim query if backend supports it
+        }
+
+        const res = await fetch(url);
         const data = await res.json();
+
         
         list.innerHTML = data.features.map(f => `
             <div class="result-item" onclick="openDetail(${JSON.stringify(f).replace(/"/g, '&quot;')})">
@@ -400,6 +1024,35 @@
         }
     }
 
+    /* ── Layer Management ────────────────────────────────────── */
+    function toggleLayerMenu() {
+        const menu = document.getElementById('layer-menu');
+        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function setLayer(style) {
+        if (style === 'satellite') {
+            map.setStyle(STYLES.satellite);
+            document.getElementById('layerThumb').style.backgroundImage = "url('https://tiles.openfreemap.org/styles/bright')";
+        } else {
+            map.setStyle(STYLES.streets);
+            document.getElementById('layerThumb').style.backgroundImage = "url('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/12/2522/1553')";
+        }
+        toggleLayerMenu();
+    }
+
+    function toggle3DMode() {
+        const is3D = map.getPitch() > 0;
+        if (is3D) {
+            map.easeTo({ pitch: 0, bearing: 0, duration: 1000 });
+            document.getElementById('btn3D').style.color = '#666';
+        } else {
+            map.easeTo({ pitch: 60, bearing: -20, duration: 1000 });
+            document.getElementById('btn3D').style.color = 'var(--gm-blue)';
+        }
+    }
+
+
     /* ── Utilities ───────────────────────────────────────────── */
     function toggleSidebar(forceOpen) {
         const s = document.getElementById('sidebar');
@@ -418,8 +1071,11 @@
     }
 
     function setupSearch() {
-        document.getElementById('searchInput').addEventListener('keydown', e => { if(e.key === 'Enter') triggerSearch(); });
+        const input = document.getElementById('searchInput');
+        input.addEventListener('keydown', e => { if(e.key === 'Enter') triggerSearch(); });
+        input.addEventListener('focus', () => { if(!input.value) showRecentSearches(); });
     }
+
 
     function geolocate() {
         navigator.geolocation.getCurrentPosition(p => map.flyTo({ center: [p.coords.longitude, p.coords.latitude], zoom: 15 }));
